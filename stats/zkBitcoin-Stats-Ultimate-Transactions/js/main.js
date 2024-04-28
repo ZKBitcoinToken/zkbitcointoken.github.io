@@ -1078,7 +1078,7 @@ console.log("DATAAMT: ", dataAmt);
       var addr = miner_info[0];
       var blocks = miner_info[1];
 
-	var RewardAmount = miner_info[2].toFixed(4);
+	var RewardAmount = miner_info[2].toFixed(0);
       var miner_name_link = getMinerNameLinkHTML(addr, known_miners);
       var percent_of_total_blocks = blocks/total_block_count;
 
