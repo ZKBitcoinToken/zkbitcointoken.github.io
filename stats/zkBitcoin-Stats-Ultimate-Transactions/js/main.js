@@ -1072,7 +1072,7 @@ console.log("DATAAMT: ", dataAmt);
       backgroundColor: [],
       label: 'miner-data'
     };
-    var innerhtml_buffer = '<tr><th>Miner</th><th>Block Count</th>'
+    var innerhtml_buffer = '<tr><th>Miner</th><th>Transaction Count</th>'
       + '<th>% of Total</th><th>Total zkBitcoin transfered By User</th></tr>';
     sorted_miner_block_count.forEach(function(miner_info) {
       var addr = miner_info[0];
