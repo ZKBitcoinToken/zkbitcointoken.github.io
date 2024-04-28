@@ -1151,11 +1151,7 @@ const formattedNumberfffff = new Intl.NumberFormat(navigator.language).format(da
     log('done populating block stats');
 
     goToURLAnchor();
-  })
-  .catch((error) => {
-    log('error filtering txs:', error);
-  });
-
+  
 
 }
 
