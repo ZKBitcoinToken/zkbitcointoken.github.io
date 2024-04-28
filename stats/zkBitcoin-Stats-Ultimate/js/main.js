@@ -952,7 +952,7 @@ var totalZKTC_Calculated = 0;
   log('blocks to search', blocks_to_search);
   var stop_log_search_at_loop = 0
   var start_log_search_at_loop = 0
-  var iterations = Math.ceil((blocks_to_search / 500000));
+  var iterations = Math.ceil((blocks_to_search / 2500000));
   if (iterations <= 0) {
     iterations = 1
   }
@@ -960,9 +960,9 @@ var totalZKTC_Calculated = 0;
   var run = 0
   while (run < iterations) {
     log('run', run + 1);
-    start_log_search_at_loop = start_log_search_at + (run * 500000)
+    start_log_search_at_loop = start_log_search_at + (run * 2500000)
     run++;
-    stop_log_search_at_loop = start_log_search_at_loop + 499999
+    stop_log_search_at_loop = start_log_search_at_loop + 2499999
     log('searching from block', start_log_search_at_loop, 'to block', stop_log_search_at_loop);
     //
   /* get all mint() transactions in the last N blocks */
