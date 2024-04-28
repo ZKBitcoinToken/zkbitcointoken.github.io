@@ -986,9 +986,9 @@ var nonew =false;
       var miner_address = getMinerAddressFromTopic(transaction['topics'][1].toString());
      var to_address = getMinerAddressFromTopic(transaction['topics'][2].toString());
       var data3345345 = transaction['data'];
-	console.log("DATA32423, ", data3345345.substring(2, 66));
+	//console.log("DATA32423, ", data3345345.substring(2, 66));
 	var dataAmt = parseInt(data3345345.substring(2, 66), 16) / (10.0 ** 18);
-console.log("DATAAMT: ", dataAmt);
+//console.log("DATAAMT: ", dataAmt);
       // log('tx_hash=', tx_hash);
       // log('  block=', block_number);
       // log('  miner=', miner_address)
