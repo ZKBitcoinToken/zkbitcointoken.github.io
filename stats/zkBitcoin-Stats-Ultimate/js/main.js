@@ -951,7 +951,7 @@ var totalZKTC_Calculated = 0;
   var blocks_to_search = (current_eth_block - start_log_search_at)
   log('blocks to search', blocks_to_search);
   var stop_log_search_at_loop = 0
-  var start_log_search_at_loop = 0
+  var start_log_search_at_loop = start_log_search_at;
   var iterations = Math.ceil((blocks_to_search / 2500000));
   if (iterations <= 0) {
     iterations = 1
