@@ -947,12 +947,28 @@ var totalZKTC_Calculated = 0;
   log("searching last_imported_mint_block", last_imported_mint_block, "blocks");
   log("searching start_log_search_at", start_log_search_at, "blocks");
   log("searching last_reward_eth_block", last_reward_eth_block, "blocks");
-  log("searching last", last_reward_eth_block - start_log_search_at, "blocks");
-
+  log("searching last", last_reward_eth_block - start_log_search_at, "blocks"); 
+  var blocks_to_search = (current_eth_block - start_log_search_at)
+  log('blocks to search', blocks_to_search);
+  var stop_log_search_at_loop = 0
+  var start_log_search_at_loop = 0
+  var iterations = Math.ceil((blocks_to_search / 50000));
+  if (iterations <= 0) {
+    iterations = 1
+  }
+  log('do', iterations, 'runs');
+  var run = 0
+  while (run < iterations) {
+    log('run', run + 1);
+    start_log_search_at_loop = start_log_search_at + (run * 50000)
+    run++;
+    stop_log_search_at_loop = start_log_search_at_loop + 49999
+    log('searching from block', start_log_search_at_loop, 'to block', stop_log_search_at_loop);
+    //
   /* get all mint() transactions in the last N blocks */
   /* more info: https://github.com/ethjs/ethjs/blob/master/docs/user-guide.md#ethgetlogs */
   /* and https://ethereum.stackexchange.com/questions/12950/what-are-event-topics/12951#12951 */
-  eth.getLogs({
+  await eth.getLogs({
     fromBlock: start_log_search_at,
     toBlock: last_reward_eth_block,
     address: _CONTRACT_ADDRESS,
@@ -1005,7 +1021,19 @@ console.log("DATAAMT: ", dataAmt);
 	}
 	}
     });
-
+	
+  
+	
+	})  
+.catch((error) => {
+    log('error filtering txs:', error);
+     log('error filtering txs:', error);
+     log('repeat run', run);
+     run = run - 1
+     sleep(500)
+  });
+  
+  }
     if (result.length > 0) {
       localStorage.setItem('mintData_EraBitcoin_afbRAFFABC', JSON.stringify(mined_blocks));
       localStorage.setItem('lastMintBlock_EraBitcoin_afbRAFFABC', mined_blocks[0][0]);
@@ -1421,5 +1449,4 @@ function updateAndDisplayAllStats() {
   createStatsTable();
   loadAllStats();
 }
-
 
