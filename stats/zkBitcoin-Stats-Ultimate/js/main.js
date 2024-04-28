@@ -969,8 +969,8 @@ var totalZKTC_Calculated = 0;
   /* more info: https://github.com/ethjs/ethjs/blob/master/docs/user-guide.md#ethgetlogs */
   /* and https://ethereum.stackexchange.com/questions/12950/what-are-event-topics/12951#12951 */
   await eth.getLogs({
-    fromBlock: start_log_search_at,
-    toBlock: last_reward_eth_block,
+    fromBlock: start_log_search_at_loop,
+    toBlock: stop_log_search_at_loop,
     address: _CONTRACT_ADDRESS,
     topics: [_MINT_TOPIC, null],
   })
