@@ -872,7 +872,7 @@ function getMinerAddressFromTopic(topic) {
 
 
 /* TODO use hours_into_past */
-function updateAllMinerInfo(eth, stats, hours_into_past){
+async function updateAllMinerInfo(eth, stats, hours_into_past){
   log('updateAllMinerInfo');
 
 var totalZKBTC_Mined = [];
