@@ -1034,7 +1034,7 @@ console.log("DATAAMT: ", dataAmt);
   });
   
   }
-    if (result.length > 0) {
+    if (run > 0) {
       localStorage.setItem('mintData_EraBitcoin_afbRAFFABC', JSON.stringify(mined_blocks));
       localStorage.setItem('lastMintBlock_EraBitcoin_afbRAFFABC', mined_blocks[0][0]);
       localStorage.setItem('lastDifficultyStartBlock_EraBitcoin_afbRAFFABC', last_difficulty_start_block.toString());
