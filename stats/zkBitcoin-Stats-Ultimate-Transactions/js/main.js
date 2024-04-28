@@ -1125,7 +1125,7 @@ const formattedNumberfffff23 = new Intl.NumberFormat(navigator.language).format(
       var eth_block = parseInt(block_info[0]);
       var tx_hash = block_info[1];
       var addr = block_info[2];
-	var dataF = block_info[3].toFixed(4);
+	var dataF = block_info[3].toFixed(1);
 
 const formattedNumberfffff = new Intl.NumberFormat(navigator.language).format(dataF);
 	var addrTo = block_info[4];
