@@ -885,7 +885,7 @@ function getMinerAddressFromTopic(topic) {
 
 
 /* TODO use hours_into_past */
-function updateAllMinerInfo(eth, stats, hours_into_past){
+async function updateAllMinerInfo(eth, stats, hours_into_past){
   log('updateAllMinerInfo');
 
 var totalZKBTC_Mined = [];
@@ -939,7 +939,7 @@ var totalZKTC_Calculated = 0;
     last_imported_mint_block = 0;
     mined_blocks.length = 0;
   }
-
+var nonew =false;
   var start_log_search_at = Math.max(ethblockstart +0, last_imported_mint_block + 1);
     last_reward_eth_block = last_reward_eth_block - 2
 
@@ -949,19 +949,36 @@ var totalZKTC_Calculated = 0;
   log("searching last_reward_eth_block", last_reward_eth_block, "blocks");
   log("searching last", last_reward_eth_block - start_log_search_at, "blocks");
 
+  log("searching last", last_reward_eth_block - start_log_search_at, "blocks"); 
+  var blocks_to_search = (current_eth_block - start_log_search_at)
+  log('blocks to search', blocks_to_search);
+  var stop_log_search_at_loop = 0
+  var start_log_search_at_loop = start_log_search_at;
+  var iterations = Math.ceil((blocks_to_search / 2500000));
+  if (iterations <= 0) {
+    iterations = 1
+  }
+  log('do', iterations, 'runs');
+  var run = 0
+  while (run < iterations) {
+    log('run', run + 1);
+    start_log_search_at_loop = start_log_search_at + (run * 2500000)
+    run++;
+    stop_log_search_at_loop = start_log_search_at_loop + 2499999
+    log('searching from block', start_log_search_at_loop, 'to block', stop_log_search_at_loop);
+    //
   /* get all mint() transactions in the last N blocks */
   /* more info: https://github.com/ethjs/ethjs/blob/master/docs/user-guide.md#ethgetlogs */
   /* and https://ethereum.stackexchange.com/questions/12950/what-are-event-topics/12951#12951 */
-  eth.getLogs({
-    fromBlock: start_log_search_at,
-    toBlock: last_reward_eth_block,
+  await eth.getLogs({
+    fromBlock: start_log_search_at_loop,
+    toBlock: stop_log_search_at_loop,
     address: _CONTRACT_ADDRESS,
     topics: [_MINT_TOPIC, null],
   })
   .then((result) => {
 
     log("got filter results:", result.length, "transactions");
-var nonew =false;
 // Output the result
     result.forEach(function(transaction){
       var tx_hash = transaction['transactionHash'];
@@ -992,6 +1009,16 @@ console.log("DATAAMT: ", dataAmt);
 	}
     });
 
+	})  
+.catch((error) => {
+    log('error filtering txs:', error);
+     log('error filtering txs:', error);
+     log('repeat run', run);
+     run = run - 1
+     sleep(500)
+  });
+  
+  }
     if (nonew) {
       localStorage.setItem('mintData_EraBitcoinfffFF', JSON.stringify(mined_blocks));
       localStorage.setItem('lastMintBlock_EraBitcoinfffFF', mined_blocks[0][0]);
