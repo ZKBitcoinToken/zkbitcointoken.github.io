@@ -36,6 +36,7 @@ const _CONTRACT_ADDRESS4 = "0x911a89de0430a5ce3699e57d508f8678afa1fffc"; //LP to
 const _CONTRACT_ADDRESS5 = "0x7e7bd2E66668e8C3cD48aEA8a380dC504FB21843"; //balancer HELPER
 const _CONTRACT_ADDRESS6 = "0xAb48108f8A5b42b2C07f818bf38a5175c28b5424"; //staking contract for LPers #2 #2 #2
 const _CONTRACT_ADDRESS7 = "0x01e648d9d37df577bc3509d4152efc5590bcb832"; //LP token #2 #2 #2
+const _CONTRACT_ADDRESS25 = "0x63CFc2Af2b3802a85F03ca500e483d0F28Feb67c"; //LP token #2 #2 #2
 
 
 const _MINT_TOPIC = "0xcf6fbb9dcea7d07263ab4f5c3a92f53af33dffc421d9d121e1c74b307e68189d";
@@ -123,6 +124,7 @@ var known_miners = {
 
 
 const token = eth.contract(tokenABI).at(_CONTRACT_ADDRESS);
+const token252525 = eth.contract(tokenABI).at(_CONTRACT_ADDRESS25);
 const token2 = eth.contract(tokenABI2).at(_CONTRACT_ADDRESS2); // auction
 const token3 = eth.contract(tokenABI3).at(_CONTRACT_ADDRESS3); //staking
 const token4 = eth.contract(tokenABI4).at(_CONTRACT_ADDRESS4); //lp
@@ -236,8 +238,8 @@ stats = [
  	['Current Average Reward Time',   null,                                 "minutes",          1,          null     ], /* mining difficulty */
    ['Reward per Solve',   token.getMiningReward,                                _CONTRACT_SYMBOL,          0.000000000000000001,          null     ], /* mining difficulty */
 ['Rewards Until Readjustment',    token.blocksToReadjust,                                 "",                 1,          null     ], /* mining blocks per adjustment MUST KEEP MUST KEEP MUST */  
+ ['Time Until Emergency Adjustment Activated if all rewards not solved',    token252525.calculateSecondsUntilAdjustmentSwitch,                                 "seconds",              1,          null     ], /* usage */
 
-     
  ['Last Difficulty Start Block',   token.latestDifficultyPeriodStarted,  "",                 1,          null     ], /* mining difficulty */
   ['Last Difficulty Time',   token.latestDifficultyPeriodStarted2,  "",                 1,          null     ], /* mining difficulty */
   ['Target Time',   token.targetTime,  "",                 1,          null     ], /* mining difficulty */
@@ -289,6 +291,10 @@ stats = [
  
 ]
 
+
+//calculateSecondsUntilAdjustmentSwitch
+//tokenABI2
+//seconds_Until_adjustmentSwitch
 var latest_eth_block = null;
 eth.blockNumber().then((value)=>{
   latest_eth_block = parseInt(value.toString(10), 10);
@@ -499,7 +505,6 @@ if(test51 != -1){
 
 
 
-
  var  auction_Total = getValueFromStats('Tokens distributed via Auctions', stats) - 32768
 
 
@@ -524,12 +529,6 @@ console.log("totalCircl", totalCircl);
   /* time per reward block */
   current_eth_block = getValueFromStats('Last ZK Sync Era Block Number', stats)
   difficulty_start_eth_block = getValueFromStats('Last Difficulty Start Block', stats)
-
-
-
-
-
-
 
 
   /* Add timestamp to 'Last difficulty start block' stat */
@@ -591,7 +590,7 @@ _SECONDS_PER_ETH_BLOCK = Sec_Per_reward
   el_safe('#CurrentAverageRewardTime').innerHTML = "<b>" + (diffTimezzz / 60).toFixed(3) + "</b> minutes";
   /* add a time estimate to RewardsUntilReadjustment */
 rewards_left = getValueFromStats('Rewards Until Readjustment', stats)
-  el_safe('#RewardsUntilReadjustment').innerHTML += "<span style='font-size:0.8em;'>(~" + secondsToReadableTime(rewards_left*seconds_per_reward) + ")</span>";
+
  hashy = getValueFromStats('Mining Difficulty', stats)*2;
   /* calculate next difficulty */
   targetTimez = getValueFromStats('Target Time', stats);
@@ -601,6 +600,30 @@ rewards_left = getValueFromStats('Rewards Until Readjustment', stats)
 
 
 
+
+
+
+
+
+
+ var  secUntilBlocks = getValueFromStats('Time Until Emergency Adjustment Activated if all rewards not solved', stats)
+
+var indaysTime = secUntilBlocks / (60 * 60 * 24);
+
+var MaxNumber = getValueFromStats('Rewards Until Readjustment', stats) 
+var eCountz = getValueFromStats('Epoch Count', stats) 
+var eCountzOld = getValueFromStats('Epoch Old', stats)
+ var NumberToGoLeft =  2048/32 - ((eCountz - eCountzOld) % (2048/32));
+
+if(secUntilBlocks<1){
+    el_safe('#TimeUntilEmergencyAdjustmentActivatedifallrewardsnotsolved').innerHTML =  "<b>Emergency Adjustment Activated "+NumberToGoLeft+" blocks left in adjustment period</b>"
+  el_safe('#RewardsUntilReadjustment').innerHTML = "<b>"+NumberToGoLeft + "</b> blocks" + "<span style='font-size:0.8em;'>(~" + secondsToReadableTime(NumberToGoLeft*seconds_per_reward) + ")</span>";
+  }else{
+      el_safe('#TimeUntilEmergencyAdjustmentActivatedifallrewardsnotsolved').innerHTML =  "<b>"+secondsToReadableTime(secUntilBlocks) + "</b>";
+  el_safe('#RewardsUntilReadjustment').innerHTML += "<span style='font-size:0.8em;'>(~" + secondsToReadableTime(rewards_left*seconds_per_reward) + ")</span>";
+  
+  
+  }
 
 
 log("22diff", difficulty)
@@ -1320,11 +1343,11 @@ if(stat[0]=='Total Supply in all Balancer Pool 2' || stat[0] =='TotalSupply Stak
 
 */
 
-
+var stustu = stat_name + "doMore2";
 if(goodStat && stat[0]!='Tokens distributed via Mining2' && stat[0]!='u2' && stat[0] != 'Current Mining Reward per 12 minute Solve' && stat[0] != 'u4' && stat[0] != 'u5' && stat[0] != 'u6' && stat[0] != 'u7' && stat[0] != 'Last Eth Block' && stat[0] != 'u8' && stat[0] != 'u9' && stat[0] != 'u77' && stat[0] != 'u88' && stat[0] != 'u99' && stat[0] != 'u1010'){
    
 
-    el('#statistics').innerHTML += '<tr><td>'
+    el('#statistics').innerHTML += '<tr><td id="'+stustu.replace(/ /g,"")+'">'
       + stat_name + '</td><td id="'
       + stat_name.replace(/ /g,"") + '"></td></tr>';
 }

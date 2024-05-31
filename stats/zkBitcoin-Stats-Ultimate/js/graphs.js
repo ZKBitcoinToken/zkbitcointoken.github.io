@@ -513,6 +513,18 @@ console.log("CB" , current_eth_block)
             y: item.y / total_price_data4[index].y
         };
     });
+    
+    let resultGraph = total_price_data.map((item, index) => {
+        if (total_price_data2[index].y === 0) {
+            // Handle division by zero if necessary
+            console.error("Division by zero at index " + index);
+            return null; // or handle it another way, depending on your needs
+        }
+        return {
+            x: item.x, // You can choose to retain the x value or modify this structure
+            y: 1 / (item.y / total_price_data2[index].y)
+        };
+    });
       let result2 = total_price_data.map((item, index) => {
         if (total_price_data2[index].y === 0) {
             // Handle division by zero if necessary
@@ -540,8 +552,12 @@ console.log("CB" , current_eth_block)
   console.log("TTTT TOTAL PRICE DATA3333 : ", result2);
   console.log("Actual Price in USD data : ", avgPriceAtTime);
   var largest$Array = avgPriceAtTime.reduce((max, cur) => Math.max(max, cur.y), avgPriceAtTime[0].y);
+  var largestETHArray = resultGraph.reduce((max, cur) => Math.max(max, cur.y), resultGraph[0].y);
   largest$Array = largest$Array * 1.05;
+  largestETHArray = largestETHArray * 1.05;
+
   console.log("largest number: ", largest$Array);
+  console.log("largest ETH number: ", largestETHArray);
   var eras_per_block_data = getErasPerBlockFromEraData(era_values);
 
   var hashrate_data = getHashrateDataFromDifficultyAndErasPerBlockData(difficulty_data, eras_per_block_data);
@@ -583,6 +599,7 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
       max_hashrate_value = hashrate_data[i].y;
     }
   }
+  console.log("difficulty_data: ", difficulty_data);
   var hashrate_based_on_difficulty = max_difficulty_value * _HASHRATE_MULTIPLIER / _IDEAL_BLOCK_TIME_SECONDS;
   var difficulty_based_on_hashrate = max_hashrate_value / ((_HASHRATE_MULTIPLIER) / _IDEAL_BLOCK_TIME_SECONDS);
   if (hashrate_based_on_difficulty > max_hashrate_value) {
@@ -765,14 +782,24 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
 
     data: {
         datasets: [{
-            label: "Total Price Data",
+            label: "Total USD $ Price of 1 zkBTC",
             showLine: true,
             //steppedLine: 'before',
-            backgroundColor: 'rgb(255, 152, 0)',
-            borderColor: 'rgb(255, 152, 0)',
+            backgroundColor: 'rgb(50,205,50)',
+            borderColor: 'rgb(50,205,50)',
             data: avgPriceAtTime,
             fill: false,
             yAxisID: 'first-y-axis'
+
+        },{
+            label: "Total ETH Price of 1 zkBTC",
+            showLine: true,
+            //steppedLine: 'before',
+            backgroundColor: 'rgb(158, 168, 219)',
+            borderColor: 'rgb(158, 168, 219)',
+            data: resultGraph,
+            fill: false,
+            yAxisID: 'second-y-axis'
 
         }]
     },
@@ -805,6 +832,8 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
               label +=toReadableHashrate(tooltipItem.yLabel);
             }else if (data.datasets[tooltipItem.datasetIndex].label == "Average Reward Time") {
               label += (+tooltipItem.yLabel).toFixed(2) + ' Minutes';
+            }else if (data.datasets[tooltipItem.datasetIndex].label == "Total ETH Price of 1 zkBTC") {
+              label += (+tooltipItem.yLabel).toFixed(8) + ' ETH';
             } else {
               label += Math.round(tooltipItem.yLabel * 10000) / 10000;
             }
@@ -833,8 +862,8 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
             //type: 'logarithmic',  /* hard to read */
             scaleLabel: {
               display: true,
-              labelString: 'Average Price in $',
-              fontColor: 'rgb(79, 195, 247)',
+              labelString: 'Average Price in USD $',
+              fontColor: 'rgb(50,205,50)',
             },
             gridLines: {
               color: 'rgb(97, 97, 97)',
@@ -849,6 +878,33 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
                 return value.toFixed(3);
               },
             },
+        }, {
+          id: 'second-y-axis',
+          position: 'right',
+          type: 'linear',
+          //type: 'logarithmic',  /* hard to read */
+          scaleLabel: {
+            display: true,
+            labelString: 'Average Price in ETH',
+            fontColor: 'rgb(158, 168, 219)',
+          },
+          gridLines: {
+            color: 'rgb(97, 97, 97)',
+            zeroLineColor: 'rgb(97, 97, 97)',
+            drawOnChartArea: false, // only want the grid lines for one axis to show up
+          },
+          ticks: {
+            // Include a dollar sign in the ticks
+            
+         suggestedMax: largestETHArray,
+            callback: function(value, index, values) {
+              return value.toFixed(8);
+            },
+            //maxTicksLimit: 6,
+            min: 0,
+            autoSkip: true,
+            /*stepSize: 1000,*/
+          }
         }]
       }
     },
