@@ -1102,7 +1102,7 @@ log("start_eth_block", start_eth_block)
   last_diff_start_blocks.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
   era_values.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
   tokens_minted_values.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
-
+mining_target_values.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
 
   // wait on all pending eth log requests to finish (with progress)
   while(!last_diff_start_blocks.areAllValuesLoaded()) {
@@ -1124,33 +1124,40 @@ log("start_eth_block", start_eth_block)
   }
   await last_diff_start_blocks.waitUntilLoaded();
 
-  // sort and archive before removing duplicates
+  await mining_target_values.waitUntilLoaded();
+  await tokens_minted_values.waitUntilLoaded();
+  await tokens_minted_values.waitUntilLoaded();
+  await era_values.waitUntilLoaded();
+  await tokens_price_values4.waitUntilLoaded();
+  await tokens_price_values3.waitUntilLoaded();
+  await tokens_price_values2.waitUntilLoaded();
+  await tokens_price_values.waitUntilLoaded();
   last_diff_start_blocks.sortValues();
-  last_diff_start_blocks.saveToLocalStorage();
-
-  /* this operation removes removes duplicate values keeping only the first */
-  last_diff_start_blocks.removeExtraValuesForStepChart();
 
   // Load 'mining target' at each eth block that indicated by the set of
   // latestDifficultyPeriodStarted values
-  let diff_start_block_values = last_diff_start_blocks.getValues;
-  for (var i in diff_start_block_values) {
-    let block_num = diff_start_block_values[i][0].toString(10);
+  /*
+  let diff_start_block_values3 = era_values.getValues;
+  for (var i in diff_start_block_values3) {
+    let block_num = diff_start_block_values3[i][0].toString(10);
 log("start_eth_block block_num", block_num)
-
+last_diff_start_blocks.addValueAtEthBlock(block_num);
     mining_target_values.addValueAtEthBlock(block_num);
     tokens_price_values.addValueAtEthBlock(block_num);
+    await sleep(10)
     tokens_price_values2.addValueAtEthBlock(block_num);
     tokens_price_values3.addValueAtEthBlock(block_num);
     tokens_price_values4.addValueAtEthBlock(block_num);
+    await sleep(10)
   }
+last_diff_start_blocks.addValueAtEthBlock(end_eth_block);
   mining_target_values.addValueAtEthBlock(end_eth_block);
     tokens_price_values.addValueAtEthBlock(end_eth_block);
     tokens_price_values2.addValueAtEthBlock(end_eth_block);
     tokens_price_values3.addValueAtEthBlock(end_eth_block);
     tokens_price_values4.addValueAtEthBlock(end_eth_block);
   
-  
+  */
   // wait on all pending eth log requests to finish (with progress)
   while(!mining_target_values.areAllValuesLoaded()
         || !tokens_minted_values.areAllValuesLoaded()
@@ -1184,12 +1191,21 @@ log("start_eth_block block_num", block_num)
   tokens_price_values3.sortValues();
   tokens_price_values4.sortValues();
   
+  // sort and archive before removing duplicates
+  last_diff_start_blocks.sortValues();
+
+  /* this operation removes removes duplicate values keeping only the first */
+  last_diff_start_blocks.removeExtraValuesForStepChart();
+  mining_target_values.removeExtraValuesForStepChart();
   // TODO: remove this when we are sure it is fixed
   //era_values.deleteLastPointIfZero();
+log("MINING TARGET "+ mining_target_values.getValues);
 log("MINING TARGET "+ mining_target_values.getValues);
   generateHashrateAndBlocktimeGraph(eth, mining_target_values, era_values, tokens_price_values, tokens_price_values2, tokens_price_values3, tokens_price_values4, tokens_minted_values);
 
   era_values.saveToLocalStorage();
+  last_diff_start_blocks.saveToLocalStorage();
+
   tokens_minted_values.saveToLocalStorage();
   tokens_price_values.saveToLocalStorage();
   tokens_price_values2.saveToLocalStorage();
