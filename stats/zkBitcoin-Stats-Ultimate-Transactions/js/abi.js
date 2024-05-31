@@ -53,4 +53,34 @@ const tokenABI = [{"inputs":[],"stateMutability":"nonpayable","type":"constructo
         "payable": false,
         "stateMutability": "view",
         "type": "function"
-    }];
+    },  {
+        "constant": true,
+        "inputs": [],
+        "name": "seconds_Until_adjustmentSwitch",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },  {
+        "constant": true,
+        "inputs": [],
+        "name": "calculateSecondsUntilAdjustmentSwitch",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    }
+    
+    
+    
+    ];

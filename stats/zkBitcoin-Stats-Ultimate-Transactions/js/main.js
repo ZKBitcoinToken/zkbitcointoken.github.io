@@ -26,6 +26,8 @@ const _ZERO_BN = new Eth.BN(0, 10);
 const _CONTRACT_NAME = "zkBitcoin";
 const _CONTRACT_SYMBOL = "zkBTC";
 const _CONTRACT_ADDRESS = "0x366d17aDB24A7654DbE82e79F85F9Cb03c03cD0D"; // main zkBTC Contract
+const _CONTRACT_ADDRESS25 = "0x63CFc2Af2b3802a85F03ca500e483d0F28Feb67c"; //helper contract for emergency diff adjustment timer
+
 const _CONTRACT_ADDRESS2 = "0x470ecC269dE29ed2d801ef02c4c95F6e107a64B5"; //auction address
 
 const _USD_ETH_POOL_ADDRESS = "0x80115c708E12eDd42E504c1cD52Aea96C547c05c"; //auction address
@@ -128,6 +130,8 @@ var known_miners = {
 
 
 const token = eth.contract(tokenABI).at(_CONTRACT_ADDRESS);
+const token252525 = eth.contract(tokenABI).at(_CONTRACT_ADDRESS25);
+
 const token2 = eth.contract(tokenABI2).at(_CONTRACT_ADDRESS2); // auction
 const token3 = eth.contract(tokenABI3).at(_CONTRACT_ADDRESS3); //staking
 const token4 = eth.contract(tokenABI4).at(_CONTRACT_ADDRESS4); //lp
@@ -148,6 +152,9 @@ function goToURLAnchor() {
     //$('html, body').animate({scrollTop: targetOffset}, 500);
   } else if (window.location.hash.search('#reward-time') != -1) {
     var targetOffset = $('#row-reward-time').offset().top;
+    $('html, body').animate({scrollTop: targetOffset}, 500);
+  } else if (window.location.hash.search('#price-time') != -1) {
+    var targetOffset = $('#row-price-time').offset().top;
     $('html, body').animate({scrollTop: targetOffset}, 500);
   }else if (window.location.hash.search('#miners') != -1) {
     var targetOffset = $('#row-miners').offset().top;
@@ -241,6 +248,8 @@ stats = [
  	['Current Average Reward Time',   null,                                 "minutes",          1,          null     ], /* mining difficulty */
    ['Reward per Solve',   null,                                 "minutes",          1,          null     ], /* mining difficulty */
 ['Rewards Until Readjustment',    token.blocksToReadjust,                                 "",                 1,          null     ], /* mining blocks per adjustment MUST KEEP MUST KEEP MUST */  
+
+ ['Time Until Emergency Adjustment Activated if all rewards not solved',    token252525.calculateSecondsUntilAdjustmentSwitch,                                 "seconds",              1,          null     ], /* usage */
 
  ['Last Difficulty Start Block',   token.latestDifficultyPeriodStarted,  "",                 1,          null     ], /* mining difficulty */
   ['Last Difficulty Time',   token.latestDifficultyPeriodStarted2,  "",                 1,          null     ], /* mining difficulty */
@@ -601,6 +610,31 @@ rewards_left = getValueFromStats('Rewards Until Readjustment', stats)
 
   epoch_old = getValueFromStats('Epoch Old', stats);
   newDifficulty = getValueFromStats('Mining Difficulty2', stats);
+
+
+
+
+
+ var  secUntilBlocks = getValueFromStats('Time Until Emergency Adjustment Activated if all rewards not solved', stats)
+
+var indaysTime = secUntilBlocks / (60 * 60 * 24);
+
+var MaxNumber = getValueFromStats('Rewards Until Readjustment', stats) 
+var eCountz = getValueFromStats('Epoch Count', stats) 
+var eCountzOld = getValueFromStats('Epoch Old', stats)
+ var NumberToGoLeft =  2048/32 - ((eCountz - eCountzOld) % (2048/32));
+
+if(secUntilBlocks<1){
+    el_safe('#TimeUntilEmergencyAdjustmentActivatedifallrewardsnotsolved').innerHTML =  "<b>Emergency Adjustment Activated "+NumberToGoLeft+" blocks left in adjustment period</b>"
+  el_safe('#RewardsUntilReadjustment').innerHTML = "<b>"+NumberToGoLeft + "</b> blocks" + "<span style='font-size:0.8em;'>(~" + secondsToReadableTime(NumberToGoLeft*seconds_per_reward) + ")</span>";
+  }else{
+      el_safe('#TimeUntilEmergencyAdjustmentActivatedifallrewardsnotsolved').innerHTML =  "<b>"+secondsToReadableTime(secUntilBlocks) + "</b>";
+  el_safe('#RewardsUntilReadjustment').innerHTML += "<span style='font-size:0.8em;'>(~" + secondsToReadableTime(rewards_left*seconds_per_reward) + ")</span>";
+  
+  
+  }
+
+
 
 
 log("22diff", difficulty)
