@@ -1147,7 +1147,7 @@ const formattedNumberfffff23 = new Intl.NumberFormat(navigator.language).format(
 
     /* add the last row (totals) */
     innerhtml_buffer += '<tr><td style="border-bottom: 0rem;"></td><td style="border-bottom: 0rem;">'
-      + total_block_count + '</td><td style="border-bottom: 0rem;"></td><td style="border-bottom: 0rem;"></td><td style="border-bottom: 0rem;">'+formattedNumberfffff23+' zkBitcoin</td></tr>';
+      + total_block_count + '</td><td style="border-bottom: 0rem;"></td><td style="border-bottom: 0rem;">' + total_block_count + '</td><td style="border-bottom: 0rem;">'+formattedNumberfffff23+' zkBitcoin</td></tr>';
     el('#minerstats').innerHTML = innerhtml_buffer;
     log('done populating miner stats');
     // $(window).hide().show(0);
