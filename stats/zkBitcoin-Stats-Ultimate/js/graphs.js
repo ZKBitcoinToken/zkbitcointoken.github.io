@@ -1295,7 +1295,7 @@ ALL_mining_target_values.addValuesInRange(start_eth_block, end_eth_block, num_se
                   + '% ['
                   + (numerator+numerator2).toFixed(0)
                   + ' / '
-                  + (denominator/denominator2).toFixed(0)
+                  + (denominator+denominator2).toFixed(0)
                   + ']');
     await sleep(1000);
   }
