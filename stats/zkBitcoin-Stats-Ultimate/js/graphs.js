@@ -1258,7 +1258,7 @@ log("start_eth_block", start_eth_block)
       + tokens_price_values2.expected_state_length
       + last_diff_start_blocks.expected_state_length;
       + tokens_price_values4.expected_state_length;
-    show_progress((70 * (numerator/denominator)).toFixed(0)
+    show_progress(50 * (numerator/denominator)).toFixed(0)
                   + '% ['
                   + numerator.toFixed(0)
                   + ' / '
@@ -1277,7 +1277,7 @@ log("start_eth_block", start_eth_block)
       + tokens_minted_values.expected_state_length
       + era_values.expected_state_length
       + last_diff_start_blocks.expected_state_length;
-    show_progress((70 * (numerator/denominator)).toFixed(0)
+    show_progress((100 * (numerator/denominator)).toFixed(0)
                   + '% ['
                   + numerator.toFixed(0)
                   + ' / '
