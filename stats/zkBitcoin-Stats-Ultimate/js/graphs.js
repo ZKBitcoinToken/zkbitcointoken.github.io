@@ -1231,6 +1231,7 @@ log("last Price_values3 ",tokens_price_values3.getValues)
 log("last Price_values4 ",tokens_price_values4.getValues)
   // 'mining target' is at location 11
   var mining_target_values = new contractValueOverTime(eth, _CONTRACT_ADDRESS, _MINING_TARGET_INDEX, 'miningTargets');
+	var ALL_mining_target_values_2 =  new contractValueOverTime(eth, _CONTRACT_ADDRESS, _MINING_TARGET_INDEX, 'miningTargets3');
   var ALL_mining_target_values = new contractValueOverTime(eth, _CONTRACT_ADDRESS, _MINING_TARGET_INDEX, 'miningTargets2');
 log("last mining_target_values ",mining_target_values.getValues)
 log("last mining_target_values tokens_minted_values ",tokens_minted_values.getValues)
@@ -1368,7 +1369,11 @@ last_diff_start_blocks.addValueAtEthBlock(end_eth_block);
   ALL_mining_target_values.sortValues();
   // sort and archive before removing duplicates
   last_diff_start_blocks.sortValues();
-
+	// Deep copy
+let deep_copy = JSON.parse(JSON.stringify(mining_target_values));
+	console.log("Deep copy: ", deep_copy);
+	
+ALL_mining_target_values_2 = deep_copy
   /* this operation removes removes duplicate values keeping only the first */
   mining_target_values.removeExtraValuesForStepChart();
   // TODO: remove this when we are sure it is fixed
