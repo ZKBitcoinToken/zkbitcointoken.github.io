@@ -1443,7 +1443,7 @@ last_diff_start_blocks.addValueAtEthBlock(end_eth_block);
   tokens_price_values.saveToLocalStorage();
   tokens_price_values2.saveToLocalStorage();
   tokens_price_values3.saveToLocalStorage();
-  tokens_price_values4.saveToLocalStorage();usd
+  tokens_price_values4.saveToLocalStorage();
   // don't bother with mining_target_values.  it's only a few data points which we can quickly 
   // read from the blockchain.
 
