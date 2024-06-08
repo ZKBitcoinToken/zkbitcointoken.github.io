@@ -902,8 +902,8 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
               label +=toReadableHashrate(tooltipItem.yLabel);
             }else if (data.datasets[tooltipItem.datasetIndex].label == "Average Reward Time") {
               label += (+tooltipItem.yLabel).toFixed(2) + ' Minutes';
-            }else if (data.datasets[tooltipItem.datasetIndex].label == "Total ETH Price of 1 zkBTC") {
-              label += (+tooltipItem.yLabel).toFixed(8) + ' ETH';
+            }else if (data.datasets[tooltipItem.datasetIndex].label == "24 Hour Revenue @ 31 Gh/s") {
+              label += (+tooltipItem.yLabel).toFixed(2) + ' $';
             } else {
               label += Math.round(tooltipItem.yLabel * 10000) / 10000;
             }
@@ -1016,6 +1016,8 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
               label += (+tooltipItem.yLabel).toFixed(2) + ' Minutes';
             }else if (data.datasets[tooltipItem.datasetIndex].label == "Total ETH Price of 1 zkBTC") {
               label += (+tooltipItem.yLabel).toFixed(8) + ' ETH';
+            }else if (data.datasets[tooltipItem.datasetIndex].label == "Total USD $ Price of 1 zkBTC") {
+              label += (+tooltipItem.yLabel).toFixed(4) + ' $';
             } else {
               label += Math.round(tooltipItem.yLabel * 10000) / 10000;
             }
@@ -1429,6 +1431,7 @@ last_diff_start_blocks.addValueAtEthBlock(end_eth_block);
   return objCopy;
 }
 	
+	mining_target_values.saveToLocalStorage();
 
   // TODO: remove this when we are sure it is fixed
   //era_values.deleteLastPointIfZero();
@@ -1440,8 +1443,7 @@ last_diff_start_blocks.addValueAtEthBlock(end_eth_block);
   tokens_price_values.saveToLocalStorage();
   tokens_price_values2.saveToLocalStorage();
   tokens_price_values3.saveToLocalStorage();
-  tokens_price_values4.saveToLocalStorage();
-	mining_target_values.saveToLocalStorage();
+  tokens_price_values4.saveToLocalStorage();usd
   // don't bother with mining_target_values.  it's only a few data points which we can quickly 
   // read from the blockchain.
 
