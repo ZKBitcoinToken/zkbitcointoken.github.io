@@ -287,14 +287,56 @@ console.log("IS?23 : ",eth_block_num)
 
 
 
-function generateHashrateAndBlocktimeGraph(eth, target_cv_obj, ALL_target_cv_obj, era_cv_obj, price_cv_obj, price_cv_obj2, price_cv_obj3, price_cv_obj4, tokens_minted_cv_obj) {
+function generateHashrateAndBlocktimeGraph(eth, target_cv_obj, era_cv_obj, price_cv_obj, price_cv_obj2, price_cv_obj3, price_cv_obj4, tokens_minted_cv_obj) {
   el('#difficultystats').innerHTML = '<canvas id="chart-hashrate-difficulty" width="4rem" height="2rem"></canvas>';
   el('#blocktimestats').innerHTML =  '<canvas id="chart-rewardtime" width="4rem" height="2rem"></canvas>';
   el('#priceOverTimestats').innerHTML =  '<canvas id="chart-pricetime" width="4rem" height="2rem"></canvas>';
   el('#avgRevenue').innerHTML =  '<canvas id="chart-AvgRevenue" width="4rem" height="2rem"></canvas>';
 	
+	
+	
+	
+function deepCopy(obj) {
+  if (obj === null || typeof obj !== 'object') {
+    return obj;
+  }
+
+  // Handle arrays
+  if (Array.isArray(obj)) {
+    const copy = [];
+    obj.forEach((_, i) => {
+      copy[i] = deepCopy(obj[i]);
+    });
+    return copy;
+  }
+
+  // Handle objects with prototypes
+  const copy = Object.create(Object.getPrototypeOf(obj));
+  Object.getOwnPropertyNames(obj).forEach((prop) => {
+    copy[prop] = deepCopy(obj[prop]);
+  });
+  return copy;
+}
+	
+	
+	
   var target_values = target_cv_obj.getValues;
-  var ALL_target_values = ALL_target_cv_obj.getValues;
+		
+	
+	var target_values_all = deepCopy(target_values)
+	
+	
+	
+	
+  /* this operation removes removes duplicate values keeping only the first */
+  target_cv_obj.removeExtraValuesForStepChart();
+	var target_values_2 = target_cv_obj.getValues;
+	
+	console.log("target values: ", target_values);
+	console.log("target_values_all: ", target_values_all);
+	
+	
+	
   var era_values = era_cv_obj.getValues;
   var tokens_minted_values = tokens_minted_cv_obj.getValues;
   var tokens_price_values = price_cv_obj.getValues;
@@ -488,9 +530,9 @@ console.log("CB" , current_eth_block)
     return chart_data;
   }
 
-  var difficulty_data = convertValuesToChartData(target_values, 
+  var difficulty_data = convertValuesToChartData(target_values_2, 
                                                  (x)=>{return _MAXIMUM_TARGET_BN.div(x)});
-  var ALL_difficulty_data = convertValuesToChartData(ALL_target_values, 
+  var ALL_difficulty_data = convertValuesToChartData(target_values_all, 
                                                  (x)=>{return _MAXIMUM_TARGET_BN.div(x)});
   var era_data = convertValuesToChartData(era_values);
 
@@ -1231,8 +1273,6 @@ log("last Price_values3 ",tokens_price_values3.getValues)
 log("last Price_values4 ",tokens_price_values4.getValues)
   // 'mining target' is at location 11
   var mining_target_values = new contractValueOverTime(eth, _CONTRACT_ADDRESS, _MINING_TARGET_INDEX, 'miningTargets');
-	var ALL_mining_target_values_2 =  new contractValueOverTime(eth, _CONTRACT_ADDRESS, _MINING_TARGET_INDEX, 'miningTargets3');
-  var ALL_mining_target_values = new contractValueOverTime(eth, _CONTRACT_ADDRESS, _MINING_TARGET_INDEX, 'miningTargets2');
 log("last mining_target_values ",mining_target_values.getValues)
 log("last mining_target_values tokens_minted_values ",tokens_minted_values.getValues)
 log("end_eth_block", end_eth_block)
@@ -1276,7 +1316,6 @@ let denominator=0;
   tokens_minted_values.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
     await sleep(500);
 mining_target_values.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
-	// ALL_mining_target_values.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
 
 
 
@@ -1298,7 +1337,6 @@ mining_target_values.addValuesInRange(start_eth_block, end_eth_block, num_search
     await sleep(1000);
   }
   await last_diff_start_blocks.waitUntilLoaded();
-  await ALL_mining_target_values.waitUntilLoaded();
   await mining_target_values.waitUntilLoaded();
   await tokens_minted_values.waitUntilLoaded();
   await tokens_minted_values.waitUntilLoaded();
@@ -1365,26 +1403,39 @@ last_diff_start_blocks.addValueAtEthBlock(end_eth_block);
   tokens_price_values2.sortValues();
   tokens_price_values3.sortValues();
   tokens_price_values4.sortValues();
-  ALL_mining_target_values.sortValues();
   // sort and archive before removing duplicates
   last_diff_start_blocks.sortValues();
 	// Deep copy
-let deep_copy = JSON.parse(JSON.stringify(mining_target_values));
-	console.log("Deep copy: ", deep_copy);
 	
-ALL_mining_target_values_2 = deep_copy
-  /* this operation removes removes duplicate values keeping only the first */
-  mining_target_values.removeExtraValuesForStepChart();
+	function deepCopy(obj) {
+  if (obj === null || typeof obj !== 'object') {
+    return obj;
+  }
+
+  if (Array.isArray(obj)) {
+    const arrCopy = [];
+    for (let i = 0; i < obj.length; i++) {
+      arrCopy[i] = deepCopy(obj[i]);
+    }
+    return arrCopy;
+  }
+
+  const objCopy = {};
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      objCopy[key] = deepCopy(obj[key]);
+    }
+  }
+  return objCopy;
+}
+	
+
   // TODO: remove this when we are sure it is fixed
   //era_values.deleteLastPointIfZero();
-log("MINING TARGET "+ mining_target_values.getValues);
-log("MINING TARGET "+ mining_target_values.getValues);
-  generateHashrateAndBlocktimeGraph(eth, mining_target_values, ALL_mining_target_values_2, era_values, tokens_price_values, tokens_price_values2, tokens_price_values3, tokens_price_values4, tokens_minted_values);
+  generateHashrateAndBlocktimeGraph(eth, mining_target_values, era_values, tokens_price_values, tokens_price_values2, tokens_price_values3, tokens_price_values4, tokens_minted_values);
  document.getElementById('topText').style.display = 'none';
   era_values.saveToLocalStorage();
   last_diff_start_blocks.saveToLocalStorage();
-ALL_mining_target_values.saveToLocalStorage();
-	ALL_mining_target_values_2.saveToLocalStorage();
   tokens_minted_values.saveToLocalStorage();
   tokens_price_values.saveToLocalStorage();
   tokens_price_values2.saveToLocalStorage();
