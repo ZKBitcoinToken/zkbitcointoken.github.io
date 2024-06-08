@@ -245,9 +245,13 @@ Attributions:
       </div>
 
 
-
       <div style="display:none;" id="row-difficulty">
+		  
+<div id="topText">
+			<h1>Takes up to 1 minute to load all the data please wait</h1><br></br>
+</div>
         <div class="row">
+			
           <div class="column"><h4 class="add-top-padding"><a name="difficulty"></a>Hashrate and Difficulty over the last 60 days</h4></div>
         </div>
         <div class="row">
@@ -284,6 +288,18 @@ Attributions:
           </div>
         </div>
       </div>
+  <div style="display:none;" id="row-avgRevenue-time">
+        <div class="row">
+          <div class="column"><h4 class="add-top-padding"><a name="price-time"></a>Average 24 Hour Revenue for 31 Gh/s</h4></div>
+        </div>
+        <div class="row">
+          <div class="column">
+            <div id='avgRevenue'>
+              Loading info from the blockchain...
+            </div>
+          </div>
+        </div>
+      </div>
       
       <div id="row-footer">
         <div class="row add-top-padding add-bottom-padding-5">
@@ -291,13 +307,13 @@ Attributions:
             Data fetched at:
             <span id="LastUpdatedTime">00:00:00</span>
             <div style="font-size:0.875em;">
-              Forge Stats
+              zkBitcoin Stats
               <span id="footerversion">
-                v0.1.0
+                v0.2.1
               </span>
             </div>
           </div>
-          <div class="column"><a href="https://explorer.zksync.io/address/0x1d00FFffB205CC0C5a51E7c77a7668A8B90BBb90" target="_blank"><font color="#C0392B">❤</font> 0x1d00FFffB205CC0C5a51E7c77a7668A8B90BBb90</a></div>
+          <div class="column"><a href="https://era.zksync.network/address/0x1d00FFffB205CC0C5a51E7c77a7668A8B90BBb90" target="_blank"><font color="#C0392B">❤</font> 0x1d00FFffB205CC0C5a51E7c77a7668A8B90BBb90</a></div>
         </div>
       </div>
     </div>
@@ -354,14 +370,14 @@ Attributions:
           updateAndDisplayAllStats();
         }else if(searchParams.get('page') == 'miningcalculator') {
           log('MININGCALCULATOR selected');
-          $(document).attr("title", "Mining Calculator - EraBTC Statistics");
+          $(document).attr("title", "Mining Calculator - zkBTC Statistics");
           $("#row-miningcalculator").show();
           loadAllStats();
         }else if(searchParams.get('page') == 'graphs') {
           log('GRAPHS selected');
-          let days = 60;
+          let days = 120;
           let points = 60;
-          $(document).attr("title", "Graphs - EraBTC Statistics");
+          $(document).attr("title", "Graphs - zkBTC Statistics");
           if(searchParams.get('days')) {
             days = searchParams.get('days');
           }
@@ -371,6 +387,7 @@ Attributions:
           $('#row-difficulty').show();
           $('#row-reward-time').show();
           $('#row-price-time').show();
+          $('#row-avgRevenue-time').show();
           updateGraphData(days, points);
         }
         updateLastUpdatedTime();
