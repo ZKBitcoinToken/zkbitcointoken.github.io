@@ -1248,14 +1248,15 @@ log("start_eth_block", start_eth_block)
     await sleep(200);
   last_diff_start_blocks.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
     await sleep(200);
-
+let numerator =0;
+let denominator=0;
   // wait on all pending eth log requests to finish (with progress)
   while(!last_diff_start_blocks.areAllValuesLoaded()) {
-    let numerator = tokens_price_values.states.length
+    numerator = tokens_price_values.states.length
       + tokens_price_values2.states.length
       + last_diff_start_blocks.states.length;
       + tokens_price_values4.states.length;
-    let denominator = tokens_price_values.expected_state_length
+    denominator = tokens_price_values.expected_state_length
       + tokens_price_values2.expected_state_length
       + last_diff_start_blocks.expected_state_length;
       + tokens_price_values4.expected_state_length;
