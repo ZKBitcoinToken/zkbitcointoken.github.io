@@ -1381,7 +1381,7 @@ ALL_mining_target_values_2 = deep_copy
   //era_values.deleteLastPointIfZero();
 log("MINING TARGET "+ mining_target_values.getValues);
 log("MINING TARGET "+ mining_target_values.getValues);
-  generateHashrateAndBlocktimeGraph(eth, mining_target_values, ALL_mining_target_values, era_values, tokens_price_values, tokens_price_values2, tokens_price_values3, tokens_price_values4, tokens_minted_values);
+  generateHashrateAndBlocktimeGraph(eth, mining_target_values, ALL_mining_target_values_2, era_values, tokens_price_values, tokens_price_values2, tokens_price_values3, tokens_price_values4, tokens_minted_values);
  document.getElementById('topText').style.display = 'none';
   era_values.saveToLocalStorage();
   last_diff_start_blocks.saveToLocalStorage();
