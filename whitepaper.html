@@ -165,10 +165,6 @@ but interfaces and other contracts MUST NOT expect these values to be present.</
 <p>Recent zkSync Era block hash, used to prevent pre-mining future blocks.  This is the current challenge we are solving.</p>
 <pre><code class="lang-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getChallengeNumber</span><span class="hljs-params">()</span> <span class="hljs-title">public</span> <span class="hljs-title">constant</span> <span class="hljs-title">returns</span> <span class="hljs-params">(bytes32)</span></span>
 </code></pre>
-<h4 id="getMultiMintChallengenumber">getMultiMintChallengeNumber</h4>
-<p>Recent zkSync Era block hash, used to allow extra solutions if they are the minter that changes the difficulty.</p>
-<pre><code class="lang-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getMultiMintChallengeNumber</span><span class="hljs-params">()</span> <span class="hljs-title">public</span> <span class="hljs-title">constant</span> <span class="hljs-title">returns</span> <span class="hljs-params">(bytes32)</span></span>
-</code></pre>
 <h4 id="getminingdifficulty">getMiningDifficulty</h4>
 <p>The number of digits that the digest of the PoW solution requires which typically auto adjusts during reward generation.Return the current reward amount. Depending on the algorithm, typically rewards are divided every reward era as tokens are mined to provide scarcity.</p>
 <pre><code class="lang-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getMiningDifficulty</span><span class="hljs-params">()</span> <span class="hljs-title">public</span> <span class="hljs-title">constant</span> <span class="hljs-title">returns</span> <span class="hljs-params">(uint)</span></span>
