@@ -1260,7 +1260,7 @@ log("start_eth_block", start_eth_block)
       + tokens_price_values4.expected_state_length;
     show_progress((50 * (numerator/denominator)).toFixed(0)
                   + '% ['
-                  + numerator.toFixed(0)
+                  + (0.5*numerator).toFixed(0)
                   + ' / '
                   + denominator.toFixed(0)
                   + ']');
