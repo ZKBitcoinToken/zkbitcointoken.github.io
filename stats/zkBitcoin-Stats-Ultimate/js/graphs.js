@@ -1267,24 +1267,6 @@ log("start_eth_block", start_eth_block)
     await sleep(1000);
   }
 	
-	  // wait on all pending eth log requests to finish (with progress)
-  while(!tokens_price_values4.areAllValuesLoaded()) {
-	  let numerator = mining_target_values.states.length
-      + tokens_minted_values.states.length
-      + era_values.states.length
-      + last_diff_start_blocks.states.length;
-    let denominator = mining_target_values.expected_state_length
-      + tokens_minted_values.expected_state_length
-      + era_values.expected_state_length
-      + last_diff_start_blocks.expected_state_length;
-    show_progress((100 * (numerator/denominator)).toFixed(0)
-                  + '% ['
-                  + numerator.toFixed(0)
-                  + ' / '
-                  + denominator.toFixed(0)
-                  + ']');
-    await sleep(1000);
-  }
 	
     await sleep(3000);
 	  era_values.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
@@ -1293,10 +1275,28 @@ log("start_eth_block", start_eth_block)
     await sleep(500);
 mining_target_values.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
 ALL_mining_target_values.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
-while(!ALL_mining_target_values.areAllValuesLoaded()) {
+
+
+
+		
+	  // wait on all pending eth log requests to finish (with progress)
+  while(!ALL_mining_target_values.areAllValuesLoaded()) {
+	  let numerator = mining_target_values.states.length
+      + tokens_minted_values.states.length
+      + era_values.states.length
+      + ALL_mining_target_values.states.length;
+    let denominator = mining_target_values.expected_state_length
+      + tokens_minted_values.expected_state_length
+      + era_values.expected_state_length
+      + ALL_mining_target_values.expected_state_length;
+    show_progress((100 * (numerator/denominator)).toFixed(0)
+                  + '% ['
+                  + numerator.toFixed(0)
+                  + ' / '
+                  + denominator.toFixed(0)
+                  + ']');
     await sleep(1000);
   }
-
   await last_diff_start_blocks.waitUntilLoaded();
   await ALL_mining_target_values.waitUntilLoaded();
   await mining_target_values.waitUntilLoaded();
