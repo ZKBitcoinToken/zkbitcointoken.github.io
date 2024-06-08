@@ -1281,19 +1281,19 @@ ALL_mining_target_values.addValuesInRange(start_eth_block, end_eth_block, num_se
 		
 	  // wait on all pending eth log requests to finish (with progress)
   while(!ALL_mining_target_values.areAllValuesLoaded()) {
-	  let numerator = mining_target_values.states.length
+	  let numerator2 = mining_target_values.states.length
       + tokens_minted_values.states.length
       + era_values.states.length
       + ALL_mining_target_values.states.length;
-    let denominator = mining_target_values.expected_state_length
+    let denominator2 = mining_target_values.expected_state_length
       + tokens_minted_values.expected_state_length
       + era_values.expected_state_length
       + ALL_mining_target_values.expected_state_length;
-    show_progress((100 * (numerator/denominator)).toFixed(0)
+    show_progress((50 * (numerator2/denominator2)+50*(numerator/denominator)).toFixed(0)
                   + '% ['
-                  + numerator.toFixed(0)
+                  + (numerator+numerator2).toFixed(0)
                   + ' / '
-                  + denominator.toFixed(0)
+                  + (denominator/denominator2).toFixed(0)
                   + ']');
     await sleep(1000);
   }
