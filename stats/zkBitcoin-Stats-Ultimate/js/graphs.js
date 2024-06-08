@@ -1275,7 +1275,7 @@ let denominator=0;
     await sleep(500);
   tokens_minted_values.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
     await sleep(500);
-mining_target_values.addValuesInRange(start_eth_block, end_eth_block, num_search_points);\
+mining_target_values.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
 	// ALL_mining_target_values.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
 
 
