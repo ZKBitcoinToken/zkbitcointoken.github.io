@@ -97,8 +97,8 @@ var pool_colors = {
 }
 
 var known_miners = {
-  "0x621425a1ef6abe91058e9712575dcc4258f8d091" : [ "SyncSwap LP Pool", "https://syncswap.xyz/swap?outputCurrency=0x366d17aDB24A7654DbE82e79F85F9Cb03c03cD0D",     pool_colors.blue ], // mint helper contract (old)
-  "0x49228d306754af5d16d477149ee50bef5ca286be" : [ "zkBitcoin Mining Pool", "https://pool.zkBitcoin.com/",     pool_colors.orange ], // mint helper contract (old)
+  "0x621425a1ef6abe91058e9712575dcc4258f8d091" : [ "SyncSwap LP Pool", "https://syncswap.xyz/pool/0x7002d33C756f593AB41aF4a236005766E80dC960",     pool_colors.blue ], // mint helper contract (old)
+  "0x49228d306754af5d16d477149ee50bef5ca286be" : [ "zkBitcoin Mining Pool", "https://pool.zkBitcoin.org/",     pool_colors.orange ], // mint helper contract (old)
   "0xeabe48908503b7efb090f35595fb8d1a4d55bd66" : [ "ABAS Mining Pool", "http://pool.abastoken.org/",     pool_colors.orange ], // mint helper contract
   "0x53ce57325c126145de454719b4931600a0bd6fc4" : [ "0xPool",            "http://0xPool.io",               pool_colors.purple ], // closed sometime 2018
   "0x98b155d9a42791ce475acc336ae348a72b2e8714" : [ "0xBTCpool",         "http://0xBTCpool.com",           pool_colors.blue ],
@@ -1032,7 +1032,7 @@ var nonew =false;
       // log('tx_hash=', tx_hash);
       // log('  block=', block_number);
       // log('  miner=', miner_address)
-	if(miner_address !=_CONTRACT_ADDRESS.toLowerCase()  && miner_address != _CONTRACT_ADDRESS2.toLowerCase() && miner_address != "0x0000000000000000000000000000000000000000"  ){
+	if(miner_address !=_CONTRACT_ADDRESS.toLowerCase()  && miner_address != _CONTRACT_ADDRESS2.toLowerCase() && miner_address != "0x0000000000000000000000000000000000000000"  && miner_address != "0x49228d306754af5d16d477149ee50bef5ca286be"){
 	      mined_blocks.unshift([block_number, tx_hash, miner_address, dataAmt,to_address])
 	nonew=true;
       if(miner_block_count[miner_address] === undefined) {
