@@ -1234,6 +1234,9 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
 async function show_progress(value){
   log('updating progress.. (', value, ')');
   el('#difficultystats').innerHTML = '<div class="">Loading info from the blockchain... <span style="font-weight:600;">' + value + '</span></div>';
+  el('#blocktimestats').innerHTML = '<div class="">Loading info from the blockchain... <span style="font-weight:600;">' + value + '</span></div>';
+  el('#priceOverTimestats').innerHTML = '<div class="">Loading info from the blockchain... <span style="font-weight:600;">' + value + '</span></div>';
+  el('#avgRevenue').innerHTML = '<div class="">Loading info from the blockchain... <span style="font-weight:600;">' + value + '</span></div>';
 }
 
 
