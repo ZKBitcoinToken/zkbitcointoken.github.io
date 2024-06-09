@@ -104,6 +104,9 @@ Attributions:
 
             <li class="nav"><a href="./?page=graphs&#"><i class="icon ion-ios-flame-outline navicon"></i> difficulty / hashrate</a></li>
             <li class="nav"><a href="./?page=graphs&#reward-time"><i class="icon ion-ios-speedometer-outline navicon"></i> reward time / supply</a></li>
+			   <li class="nav"><a href="./?page=graphs&#price-time"><i class="icon ion-cash navicon"></i> price graph</a></li>
+            <li class="nav"><a href="./?page=graphs&#rev-time"><i class="icon ion-ios-lightbulb navicon"></i> mining revenue graph</a></li>
+         
           </ul>
         </div>
       </div>
@@ -244,10 +247,13 @@ Attributions:
         </div>
       </div>
 
-
-
-      <div style="display:none;" id="row-difficulty">
+  <div style="display:none;" id="row-difficulty">
+		  
+<div id="topText">
+			<h1>Takes up to 1 minute to load all the data please wait</h1><br></br>
+</div>
         <div class="row">
+			
           <div class="column"><h4 class="add-top-padding"><a name="difficulty"></a>Hashrate and Difficulty over the last 60 days</h4></div>
         </div>
         <div class="row">
@@ -257,7 +263,6 @@ Attributions:
             </div>
           </div>
         </div>
-      </div>
 
       <div style="display:none;" id="row-reward-time">
         <div class="row">
@@ -271,7 +276,7 @@ Attributions:
           </div>
         </div>
       </div>
-
+  	
   <div style="display:none;" id="row-price-time">
         <div class="row">
           <div class="column"><h4 class="add-top-padding"><a name="price-time"></a>Average Price over last 60 days</h4></div>
@@ -279,6 +284,18 @@ Attributions:
         <div class="row">
           <div class="column">
             <div id='priceOverTimestats'>
+              Loading info from the blockchain...
+            </div>
+          </div>
+        </div>
+      </div>
+  <div style="display:none;" id="row-avgRevenue-time">
+        <div class="row">
+          <div class="column"><h4 class="add-top-padding"><a name="rev-time"></a>Average 24 Hour Revenue for 31 Gh/s</h4></div>
+        </div>
+        <div class="row">
+          <div class="column">
+            <div id='avgRevenue'>
               Loading info from the blockchain...
             </div>
           </div>
@@ -359,7 +376,7 @@ Attributions:
           loadAllStats();
         }else if(searchParams.get('page') == 'graphs') {
           log('GRAPHS selected');
-          let days = 60;
+          let days = 120;
           let points = 60;
           $(document).attr("title", "Graphs - EraBTC Statistics");
           if(searchParams.get('days')) {
@@ -371,6 +388,7 @@ Attributions:
           $('#row-difficulty').show();
           $('#row-reward-time').show();
           $('#row-price-time').show();
+          $('#row-avgRevenue-time').show();
           updateGraphData(days, points);
         }
         updateLastUpdatedTime();

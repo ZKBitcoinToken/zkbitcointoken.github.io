@@ -156,6 +156,12 @@ function goToURLAnchor() {
   } else if (window.location.hash.search('#price-time') != -1) {
     var targetOffset = $('#row-price-time').offset().top;
     $('html, body').animate({scrollTop: targetOffset}, 500);
+  } else if (window.location.hash.search('#rev-time') != -1) {
+    var targetOffset = $('#row-avgRevenue-time').offset().top;
+    $('html, body').animate({scrollTop: targetOffset}, 500);
+  } else if (window.location.hash.search('#price-time') != -1) {
+    var targetOffset = $('#row-price-time').offset().top;
+    $('html, body').animate({scrollTop: targetOffset}, 500);
   }else if (window.location.hash.search('#miners') != -1) {
     var targetOffset = $('#row-miners').offset().top;
     $('html, body').animate({scrollTop: targetOffset}, 500);
