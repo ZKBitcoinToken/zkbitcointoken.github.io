@@ -74,8 +74,13 @@ class contractValueOverTime {
       }
       if (use_storage) {
         let element = storage_data.pop();
-        this.states.push([element[0], new Eth.BN(element[1], 16), '']);
-        this.expected_state_length++;
+		  if (element && element[0] !== undefined) {
+    			this.states.push([element[0], new Eth.BN(element[1], 16), '']);
+       			this.expected_state_length++;
+			} else {
+				console.error('element is undefined or does not contain the expected properties:', element);
+			}
+
       } else { 
 	log('block_num before addValueAtEthBlock', block_num);
      
@@ -295,45 +300,13 @@ function generateHashrateAndBlocktimeGraph(eth, target_cv_obj, era_cv_obj, price
 	
 	
 	
-	
-function deepCopy(obj) {
-  if (obj === null || typeof obj !== 'object') {
-    return obj;
-  }
-
-  // Handle arrays
-  if (Array.isArray(obj)) {
-    const copy = [];
-    obj.forEach((_, i) => {
-      copy[i] = deepCopy(obj[i]);
-    });
-    return copy;
-  }
-
-  // Handle objects with prototypes
-  const copy = Object.create(Object.getPrototypeOf(obj));
-  Object.getOwnPropertyNames(obj).forEach((prop) => {
-    copy[prop] = deepCopy(obj[prop]);
-  });
-  return copy;
-}
-	
-	
-	
   var target_values = target_cv_obj.getValues;
 		
 	
-	var target_values_all = deepCopy(target_values)
+	var target_values_all =  target_values;
 	
 	
 	
-	
-  /* this operation removes removes duplicate values keeping only the first */
-  target_cv_obj.removeExtraValuesForStepChart();
-	var target_values_2 = target_cv_obj.getValues;
-	
-	console.log("target values: ", target_values);
-	console.log("target_values_all: ", target_values_all);
 	
 	
 	
@@ -530,9 +503,9 @@ console.log("CB" , current_eth_block)
     return chart_data;
   }
 
-  var difficulty_data = convertValuesToChartData(target_values_2, 
+  var difficulty_data = convertValuesToChartData(target_values, 
                                                  (x)=>{return _MAXIMUM_TARGET_BN.div(x)});
-  var ALL_difficulty_data = convertValuesToChartData(target_values_all, 
+  var ALL_difficulty_data = convertValuesToChartData(target_values, 
                                                  (x)=>{return _MAXIMUM_TARGET_BN.div(x)});
   var era_data = convertValuesToChartData(era_values);
 
@@ -550,6 +523,34 @@ console.log("CB" , current_eth_block)
   var total_price_data4 = convertValuesToChartData(tokens_price_values4, 
                                                    (x)=>{return x * 1/ 10**18 });
   console.log("TTTT TOTAL PRICE DATA : ", total_price_data4);
+	
+	
+	  let resultffffff = [];
+  let previousValue = null;
+
+  for (let i = 0; i < difficulty_data.length; i++) {
+    const currentValue = difficulty_data[i].y.toString();
+    const nextValue = i + 1 < difficulty_data.length ? difficulty_data[i + 1].y.toString() : null;
+
+    // Add the first occurrence
+    if (previousValue !== currentValue) {
+      resultffffff.push(difficulty_data[i]);
+      previousValue = currentValue;
+    }
+
+    // Add the last occurrence
+    if (currentValue !== nextValue && nextValue !== null) {
+      resultffffff.push(difficulty_data[i]);
+    }
+  }
+
+  // Always add the last element if it's not already included
+  if (resultffffff[resultffffff.length - 1] !== difficulty_data[difficulty_data.length - 1]) {
+    resultffffff.push(difficulty_data[difficulty_data.length - 1]);
+  }
+	console.log("resultffffff: ", resultffffff);
+	
+	
   let result = total_price_data3.map((item, index) => {
         if (total_price_data4[index].y === 0) {
             // Handle division by zero if necessary
@@ -597,17 +598,31 @@ console.log("CB" , current_eth_block)
         };
     });
 	
-	      let avgRevenue= ALL_difficulty_data.map((item, index) => {
-        if (avgPriceAtTime[index].y === 0) {
-            // Handle division by zero if necessary
-            console.error("Division by zero at index " + index);
-            return null; // or handle it another way, depending on your needs
-        }
-        return {
-            x: item.x, // You can choose to retain the x value or modify this structure
-            y: (31000000000*4320000*8/ (10* item.y * 2**22)) * avgPriceAtTime[index].y
-        };
-    });
+	  
+	let avgRevenue = [];
+let lengthDifference = Math.abs(avgPriceAtTime.length - ALL_difficulty_data.length);
+
+// Starting from the end of both arrays
+for (let i = 0; i < Math.min(avgPriceAtTime.length, ALL_difficulty_data.length); i++) {
+    let avgPriceIndex = avgPriceAtTime.length - 1 - i;
+    let difficultyIndex = ALL_difficulty_data.length - 1 - i;
+
+    if (avgPriceAtTime[avgPriceIndex].y === 0) {
+        // Handle division by zero if necessary
+        console.error("Division by zero at index " + avgPriceIndex);
+        avgRevenue.push(null); // or handle it another way, depending on your needs
+    } else {
+        avgRevenue.push({
+            x: ALL_difficulty_data[difficultyIndex].x, // You can choose to retain the x value or modify this structure
+            y: (31000000000 * 4320000 * 8 / (10 * ALL_difficulty_data[difficultyIndex].y * 2**22)) * avgPriceAtTime[avgPriceIndex].y
+        });
+    }
+}
+
+// Reverse the result array to match the original order if needed
+avgRevenue.reverse();
+
+console.log("avgRevenue TEST: ", avgRevenue);
   console.log("TTTT TOTAL PRICE DATA222 : ", result);
   console.log("TTTT TOTAL PRICE DATA3333 : ", result2);
   console.log("Actual Price in USD data : ", avgPriceAtTime);
@@ -703,7 +718,7 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
             steppedLine: 'before',
             backgroundColor: 'rgb(255, 99, 132)',
             borderColor: 'rgb(255, 99, 132)',
-            data: difficulty_data,
+            data: resultffffff,
             fill: false,
             yAxisID: 'first-y-axis',
 
@@ -1376,27 +1391,7 @@ last_diff_start_blocks.addValueAtEthBlock(end_eth_block);
     tokens_price_values4.addValueAtEthBlock(end_eth_block);
   
   */
-  // wait on all pending eth log requests to finish (with progress)
-  while(!mining_target_values.areAllValuesLoaded()
-        || !tokens_minted_values.areAllValuesLoaded()
-        || !era_values.areAllValuesLoaded()
-        || !last_diff_start_blocks.areAllValuesLoaded()) {
-    let numerator = mining_target_values.states.length
-      + tokens_minted_values.states.length
-      + era_values.states.length
-      + last_diff_start_blocks.states.length;
-    let denominator = mining_target_values.expected_state_length
-      + tokens_minted_values.expected_state_length
-      + era_values.expected_state_length
-      + last_diff_start_blocks.expected_state_length;
-    show_progress((100*(numerator/denominator)).toFixed(0)
-                  + '% ['
-                  + numerator.toFixed(0)
-                  + ' / '
-                  + denominator.toFixed(0)
-                  + ']');
-    await sleep(1000);
-  }
+
   //await mining_target_values.waitUntilLoaded();
   //await tokens_minted_values.waitUntilLoaded();
   //await era_values.waitUntilLoaded();
@@ -1412,35 +1407,15 @@ last_diff_start_blocks.addValueAtEthBlock(end_eth_block);
   last_diff_start_blocks.sortValues();
 	// Deep copy
 	
-	function deepCopy(obj) {
-  if (obj === null || typeof obj !== 'object') {
-    return obj;
-  }
 
-  if (Array.isArray(obj)) {
-    const arrCopy = [];
-    for (let i = 0; i < obj.length; i++) {
-      arrCopy[i] = deepCopy(obj[i]);
-    }
-    return arrCopy;
-  }
-
-  const objCopy = {};
-  for (const key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      objCopy[key] = deepCopy(obj[key]);
-    }
-  }
-  return objCopy;
-}
-	
 	mining_target_values.saveToLocalStorage();
-
   // TODO: remove this when we are sure it is fixed
   //era_values.deleteLastPointIfZero();
   generateHashrateAndBlocktimeGraph(eth, mining_target_values, era_values, tokens_price_values, tokens_price_values2, tokens_price_values3, tokens_price_values4, tokens_minted_values);
  document.getElementById('topText').style.display = 'none';
   era_values.saveToLocalStorage();
+	
+	mining_target_values.saveToLocalStorage();
   last_diff_start_blocks.saveToLocalStorage();
   tokens_minted_values.saveToLocalStorage();
   tokens_price_values.saveToLocalStorage();
