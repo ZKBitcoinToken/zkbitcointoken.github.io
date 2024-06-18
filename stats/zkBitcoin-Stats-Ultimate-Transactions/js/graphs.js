@@ -755,6 +755,45 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
           label: function(tooltipItem, data) {
             var label = ''
 
+			
+			
+			
+			
+			
+			
+			     const smallScreen3 = window.innerWidth < 868;
+
+      // Conditionally set the tooltip label based on the screen size
+      if (smallScreen3) {
+		  console.log("Small screen tooltip");
+            label += ' (' + ethBlockNumberToTimestamp2(tooltipItem.xLabel) + ') :  ';
+        // Small screen-specific labels
+            if (data.datasets[tooltipItem.datasetIndex].label == "Total Supply") {
+            /* Note: might have issues here if you dont set dataset label */
+            label += data.datasets[tooltipItem.datasetIndex].label+" "
+              label +=toReadableThousands(tooltipItem.yLabel)+" zkBitcoin"
+            }else if (data.datasets[tooltipItem.datasetIndex].label == "zkBitcoin Hashrate") {
+            /* Note: might have issues here if you dont set dataset label */
+            label += data.datasets[tooltipItem.datasetIndex].label+" "
+              label +=toReadableHashrate(tooltipItem.yLabel);
+            }else if (data.datasets[tooltipItem.datasetIndex].label == "Average Reward Time") {
+            /* Note: might have issues here if you dont set dataset label */
+            /* Note: might have issues here if you dont set dataset label */
+            label += data.datasets[tooltipItem.datasetIndex].label+" "
+              label += (+tooltipItem.yLabel).toFixed(2) + ' Minutes';
+            }else if (data.datasets[tooltipItem.datasetIndex].label == "Total ETH Price of 1 zkBTC") {
+              label += "ETH Price of 1 zkBTC: "+ (+tooltipItem.yLabel).toFixed(8) + ' ETH';
+            }else if (data.datasets[tooltipItem.datasetIndex].label == "Total USD $ Price of 1 zkBTC") {
+              label +=  "USD $ Price of 1 zkBTC: "+ (+tooltipItem.yLabel).toFixed(4) + ' $';
+            } else {
+            /* Note: might have issues here if you dont set dataset label */
+            label += data.datasets[tooltipItem.datasetIndex].label+ " "
+              label += Math.round(tooltipItem.yLabel * 100) / 100;
+            }
+		  
+      } else {
+		  
+	
             /* Note: might have issues here if you dont set dataset label */
             label += data.datasets[tooltipItem.datasetIndex].label
             
@@ -765,13 +804,20 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
               label +=toReadableThousands(tooltipItem.yLabel);
             }else if (data.datasets[tooltipItem.datasetIndex].label == "zkBitcoin Hashrate") {
               label +=toReadableHashrate(tooltipItem.yLabel);
-            }else if (data.datasets[tooltipItem.datasetIndex].label == "ABASToken.org Pool Hashrate") {
-              label +=toReadableHashrate(tooltipItem.yLabel);
             }else if (data.datasets[tooltipItem.datasetIndex].label == "Average Reward Time") {
               label += (+tooltipItem.yLabel).toFixed(2) + ' Minutes';
+            }else if (data.datasets[tooltipItem.datasetIndex].label == "Total ETH Price of 1 zkBTC") {
+              label += (+tooltipItem.yLabel).toFixed(8) + ' ETH';
+            }else if (data.datasets[tooltipItem.datasetIndex].label == "Total USD $ Price of 1 zkBTC") {
+              label += (+tooltipItem.yLabel).toFixed(4) + ' $';
             } else {
               label += Math.round(tooltipItem.yLabel * 100) / 100;
             }
+      }
+			  
+			  
+			
+			
             //console.log(tooltipItem, data)
             return label;
           }
@@ -907,23 +953,66 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
           label: function(tooltipItem, data) {
             var label = ''
 
+			
+			
+			
+			     const smallScreen = window.innerWidth < 868;
+
+      // Conditionally set the tooltip label based on the screen size
+      if (smallScreen) {
+		  console.log("Small screen tooltip");
+            label += ' (' + ethBlockNumberToTimestamp2(tooltipItem.xLabel) + ') :  ';
+        // Small screen-specific labels
+        if (data.datasets[tooltipItem.datasetIndex].label == "Total Supply") {
+          label += toReadableThousands(tooltipItem.yLabel);
+        } else if (data.datasets[tooltipItem.datasetIndex].label == "Network Hashrate") {
+          label += toReadableHashrate(tooltipItem.yLabel);
+        } else if (data.datasets[tooltipItem.datasetIndex].label == "Average Reward Time") {
+          label += (+tooltipItem.yLabel).toFixed(2) + ' Min';
+        } else if (data.datasets[tooltipItem.datasetIndex].label == "24 Hour Revenue @ 31 Gh/s") {
+          label += "Revenue 24 Hours 31 Gh/s: " + (+tooltipItem.yLabel).toFixed(2) + ' $';
+        } else {
+          label += Math.round(tooltipItem.yLabel * 10000) / 10000;
+        }
+      } else {
+		  
+		  console.log("Large screen tooltip");
+			
             /* Note: might have issues here if you dont set dataset label */
             label += data.datasets[tooltipItem.datasetIndex].label
             
             label += " @ Eth block #" + tooltipItem.xLabel;
             label += ' (' + ethBlockNumberToTimestamp(tooltipItem.xLabel) + ') :  ';
-
-            if (data.datasets[tooltipItem.datasetIndex].label == "Total Supply") {
-              label +=toReadableThousands(tooltipItem.yLabel);
-            }else if (data.datasets[tooltipItem.datasetIndex].label == "Network Hashrate") {
-              label +=toReadableHashrate(tooltipItem.yLabel);
-            }else if (data.datasets[tooltipItem.datasetIndex].label == "Average Reward Time") {
-              label += (+tooltipItem.yLabel).toFixed(2) + ' Minutes';
-            }else if (data.datasets[tooltipItem.datasetIndex].label == "24 Hour Revenue @ 31 Gh/s") {
-              label += (+tooltipItem.yLabel).toFixed(2) + ' $';
-            } else {
-              label += Math.round(tooltipItem.yLabel * 10000) / 10000;
-            }
+		  
+        // Large screen-specific labels
+        if (data.datasets[tooltipItem.datasetIndex].label == "Total Supply") {
+          label += toReadableThousands(tooltipItem.yLabel);
+        } else if (data.datasets[tooltipItem.datasetIndex].label == "Network Hashrate") {
+          label += toReadableHashrate(tooltipItem.yLabel);
+        } else if (data.datasets[tooltipItem.datasetIndex].label == "Average Reward Time") {
+          label += (+tooltipItem.yLabel).toFixed(2) + ' Minutes';
+        } else if (data.datasets[tooltipItem.datasetIndex].label == "24 Hour Revenue @ 31 Gh/s") {
+          label += (+tooltipItem.yLabel).toFixed(2) + ' $';
+        } else {
+          label += Math.round(tooltipItem.yLabel * 10000) / 10000;
+        }
+      }
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
             //console.log(tooltipItem, data)
             return label;
           }
@@ -1019,6 +1108,32 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
           label: function(tooltipItem, data) {
             var label = ''
 
+           
+			
+			     const smallScreen2 = window.innerWidth < 868;
+
+      // Conditionally set the tooltip label based on the screen size
+      if (smallScreen2) {
+		  console.log("Small screen tooltip");
+            label += ' (' + ethBlockNumberToTimestamp2(tooltipItem.xLabel) + ') :  ';
+        // Small screen-specific labels
+            if (data.datasets[tooltipItem.datasetIndex].label == "Total Supply") {
+              label +=toReadableThousands(tooltipItem.yLabel);
+            }else if (data.datasets[tooltipItem.datasetIndex].label == "Network Hashrate") {
+              label +=toReadableHashrate(tooltipItem.yLabel);
+            }else if (data.datasets[tooltipItem.datasetIndex].label == "Average Reward Time") {
+              label += (+tooltipItem.yLabel).toFixed(2) + ' Minutes';
+            }else if (data.datasets[tooltipItem.datasetIndex].label == "Total ETH Price of 1 zkBTC") {
+              label += "ETH Price of 1 zkBTC: "+ (+tooltipItem.yLabel).toFixed(8) + ' ETH';
+            }else if (data.datasets[tooltipItem.datasetIndex].label == "Total USD $ Price of 1 zkBTC") {
+              label +=  "USD $ Price of 1 zkBTC: "+ (+tooltipItem.yLabel).toFixed(4) + ' $';
+            } else {
+              label += Math.round(tooltipItem.yLabel * 10000) / 10000;
+            }
+		  
+      } else {
+		  
+	
             /* Note: might have issues here if you dont set dataset label */
             label += data.datasets[tooltipItem.datasetIndex].label
             
@@ -1038,6 +1153,8 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
             } else {
               label += Math.round(tooltipItem.yLabel * 10000) / 10000;
             }
+      }
+			
             //console.log(tooltipItem, data)
             return label;
           }
@@ -1135,7 +1252,7 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
           data: datasetCopy,
           yAxisID: 'first-y-axis',
         },{
-            label: "Total Supply Data",
+            label: "Total Supply",
             showLine: true,
             //steppedLine: 'before',
             backgroundColor: 'rgb(255, 152, 0)',
@@ -1163,6 +1280,41 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
           label: function(tooltipItem, data) {
             var label = ''
 
+			
+			
+			
+				
+			     const smallScreen3 = window.innerWidth < 868;
+
+      // Conditionally set the tooltip label based on the screen size
+      if (smallScreen3) {
+		  console.log("Small screen tooltip");
+            label += ' (' + ethBlockNumberToTimestamp2(tooltipItem.xLabel) + ') :  ';
+        // Small screen-specific labels
+            if (data.datasets[tooltipItem.datasetIndex].label == "Total Supply") {
+            /* Note: might have issues here if you dont set dataset label */
+            label += data.datasets[tooltipItem.datasetIndex].label+" "
+              label +=toReadableThousands(tooltipItem.yLabel)+" zkBitcoin"
+            }else if (data.datasets[tooltipItem.datasetIndex].label == "Network Hashrate") {
+            /* Note: might have issues here if you dont set dataset label */
+            label += data.datasets[tooltipItem.datasetIndex].label+" "
+              label +=toReadableHashrate(tooltipItem.yLabel);
+            }else if (data.datasets[tooltipItem.datasetIndex].label == "Average Reward Time") {
+            /* Note: might have issues here if you dont set dataset label */
+            /* Note: might have issues here if you dont set dataset label */
+            label += data.datasets[tooltipItem.datasetIndex].label+" "
+              label += (+tooltipItem.yLabel).toFixed(2) + ' Minutes';
+            }else if (data.datasets[tooltipItem.datasetIndex].label == "Total ETH Price of 1 zkBTC") {
+              label += "ETH Price of 1 zkBTC: "+ (+tooltipItem.yLabel).toFixed(8) + ' ETH';
+            }else if (data.datasets[tooltipItem.datasetIndex].label == "Total USD $ Price of 1 zkBTC") {
+              label +=  "USD $ Price of 1 zkBTC: "+ (+tooltipItem.yLabel).toFixed(4) + ' $';
+            } else {
+              label += Math.round(tooltipItem.yLabel * 10000) / 10000;
+            }
+		  
+      } else {
+		  
+	
             /* Note: might have issues here if you dont set dataset label */
             label += data.datasets[tooltipItem.datasetIndex].label
             
@@ -1175,9 +1327,20 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
               label +=toReadableHashrate(tooltipItem.yLabel);
             }else if (data.datasets[tooltipItem.datasetIndex].label == "Average Reward Time") {
               label += (+tooltipItem.yLabel).toFixed(2) + ' Minutes';
+            }else if (data.datasets[tooltipItem.datasetIndex].label == "Total ETH Price of 1 zkBTC") {
+              label += (+tooltipItem.yLabel).toFixed(8) + ' ETH';
+            }else if (data.datasets[tooltipItem.datasetIndex].label == "Total USD $ Price of 1 zkBTC") {
+              label += (+tooltipItem.yLabel).toFixed(4) + ' $';
             } else {
-              label += Math.round(tooltipItem.yLabel * 100) / 100;
+              label += Math.round(tooltipItem.yLabel * 10000) / 10000;
             }
+      }
+			  
+			  
+			  
+			  
+			  
+			  
             //console.log(tooltipItem, data)
             return label;
           }
@@ -1368,6 +1531,7 @@ while (!mining_target_values.areAllValuesLoaded() || !tokens_minted_values.areAl
 
     await sleep(1000);
 }
+
   await last_diff_start_blocks.waitUntilLoaded();
   await mining_target_values.waitUntilLoaded();
   await tokens_minted_values.waitUntilLoaded();
