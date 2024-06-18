@@ -79,7 +79,7 @@ class contractValueOverTime {
     			this.states.push([element[0], new Eth.BN(element[1], 16), '']);
        			this.expected_state_length++;
 			} else {
-				console.error('element is undefined or does not contain the expected properties:', element,"  Block_num: ",block_ );
+				console.error('element is undefined or does not contain the expected properties:', element,"  Block_num: ",block_num );
 				this.addValueAtEthBlock(block_num);
 			}
 
