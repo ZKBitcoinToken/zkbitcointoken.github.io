@@ -749,7 +749,10 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
         }*/]
     },
 
-    options: {
+    options: { 
+	responsive: true, // Enable responsiveness
+    maintainAspectRatio: true, // Disable maintaining aspect ratio
+  
       tooltips: {
         callbacks: {
           label: function(tooltipItem, data) {
@@ -938,6 +941,8 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
     },
 
     options: {
+	responsive: true, // Enable responsiveness
+    maintainAspectRatio: true, // Disable maintaining aspect ratio
       legend: {
         //display: false,
         labels: {
@@ -1093,6 +1098,8 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
     },
 
     options: {
+	responsive: true, // Enable responsiveness
+    maintainAspectRatio: true, // Disable maintaining aspect ratio
       legend: {
         //display: false,
         labels: {
@@ -1265,6 +1272,8 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
     },
 
     options: {
+	responsive: true, // Enable responsiveness
+    maintainAspectRatio: true, // Disable maintaining aspect ratio
       legend: {
         //display: false,
         labels: {
