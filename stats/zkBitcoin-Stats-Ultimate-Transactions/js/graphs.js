@@ -53,6 +53,7 @@ class contractValueOverTime {
     if (storage_data != null) {
       log('read in', storage_data.length, 'cached elements for', this.descriptor);
       last_storage_block = storage_data[storage_data.length - 1][0];
+	 log("LAST BLOCK: ", last_storage_block, " for ", this.descriptor);
     }
 
     // get a data point for the current time (ie. end_block_num), then get remaining data points
@@ -78,7 +79,8 @@ class contractValueOverTime {
     			this.states.push([element[0], new Eth.BN(element[1], 16), '']);
        			this.expected_state_length++;
 			} else {
-				console.error('element is undefined or does not contain the expected properties:', element);
+				console.error('element is undefined or does not contain the expected properties:', element,"  Block_num: ",block_num );
+				this.addValueAtEthBlock(block_num);
 			}
 
       } else { 
@@ -1297,65 +1299,75 @@ log("last mining_target_values ",mining_target_values.getValues)
 log("last mining_target_values tokens_minted_values ",tokens_minted_values.getValues)
 log("end_eth_block", end_eth_block)
 log("start_eth_block", start_eth_block)
-  tokens_price_values.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
-	
-    await sleep(500);
-  tokens_price_values2.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
-    await sleep(200);
-  tokens_price_values3.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
-    await sleep(200);
-  tokens_price_values4.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
-    await sleep(200);
-  last_diff_start_blocks.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
-    await sleep(200);
-let numerator =0;
-let denominator=0;
-  // wait on all pending eth log requests to finish (with progress)
-  while(!last_diff_start_blocks.areAllValuesLoaded()) {
+ tokens_price_values.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
+await sleep(500);
+
+tokens_price_values2.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
+await sleep(200);
+
+tokens_price_values3.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
+await sleep(200);
+
+tokens_price_values4.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
+await sleep(200);
+
+last_diff_start_blocks.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
+await sleep(200);
+
+let numerator = 0;
+let denominator = 0;
+
+// wait on all pending eth log requests to finish (with progress)
+while (!last_diff_start_blocks.areAllValuesLoaded() || !tokens_price_values.areAllValuesLoaded() || !tokens_price_values2.areAllValuesLoaded() || !tokens_price_values4.areAllValuesLoaded()) {
     numerator = tokens_price_values.states.length
-      + tokens_price_values2.states.length
-      + last_diff_start_blocks.states.length;
-      + tokens_price_values4.states.length;
+        + tokens_price_values2.states.length
+        + tokens_price_values4.states.length
+        + last_diff_start_blocks.states.length;
+
     denominator = tokens_price_values.expected_state_length
-      + tokens_price_values2.expected_state_length
-      + last_diff_start_blocks.expected_state_length;
-      + tokens_price_values4.expected_state_length;
-    show_progress((50 * (numerator/denominator)).toFixed(0)
-                  + '% ['
-                  + (0.5*numerator).toFixed(0)
-                  + ' / '
-                  + denominator.toFixed(0)
-                  + ']');
+        + tokens_price_values2.expected_state_length
+        + tokens_price_values4.expected_state_length
+        + last_diff_start_blocks.expected_state_length;
+
+    show_progress((50 * (numerator / denominator)).toFixed(0)
+        + '% ['
+        + (0.5 * numerator).toFixed(0)
+        + ' / '
+        + denominator.toFixed(0)
+        + ']');
+
     await sleep(1000);
-  }
-	
-	
-    await sleep(3000);
-	  era_values.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
-    await sleep(500);
-  tokens_minted_values.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
-    await sleep(500);
+}
+
+await sleep(3000);
+
+era_values.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
+await sleep(500);
+
+tokens_minted_values.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
+await sleep(500);
+
 mining_target_values.addValuesInRange(start_eth_block, end_eth_block, num_search_points);
 
+// wait on all pending eth log requests to finish (with progress)
+while (!mining_target_values.areAllValuesLoaded() || !tokens_minted_values.areAllValuesLoaded() || !era_values.areAllValuesLoaded()) {
+    let numerator2 = mining_target_values.states.length
+        + tokens_minted_values.states.length
+        + era_values.states.length;
 
-
-		
-	  // wait on all pending eth log requests to finish (with progress)
-  while(!mining_target_values.areAllValuesLoaded()) {
-	  let numerator2 = mining_target_values.states.length
-      + tokens_minted_values.states.length
-      + era_values.states.length;
     let denominator2 = mining_target_values.expected_state_length
-      + tokens_minted_values.expected_state_length
-      + era_values.expected_state_length;
-    show_progress((50 * (numerator2/denominator2)+50*(numerator/denominator)).toFixed(0)
-                  + '% ['
-                  + (numerator+numerator2).toFixed(0)
-                  + ' / '
-                  + (denominator+denominator2).toFixed(0)
-                  + ']');
+        + tokens_minted_values.expected_state_length
+        + era_values.expected_state_length;
+
+    show_progress((50 * (numerator2 / denominator2) + 50 * (numerator / denominator)).toFixed(0)
+        + '% ['
+        + (numerator + numerator2).toFixed(0)
+        + ' / '
+        + (denominator + denominator2).toFixed(0)
+        + ']');
+
     await sleep(1000);
-  }
+}
   await last_diff_start_blocks.waitUntilLoaded();
   await mining_target_values.waitUntilLoaded();
   await tokens_minted_values.waitUntilLoaded();
@@ -1415,7 +1427,6 @@ last_diff_start_blocks.addValueAtEthBlock(end_eth_block);
  document.getElementById('topText').style.display = 'none';
   era_values.saveToLocalStorage();
 	
-	mining_target_values.saveToLocalStorage();
   last_diff_start_blocks.saveToLocalStorage();
   tokens_minted_values.saveToLocalStorage();
   tokens_price_values.saveToLocalStorage();
