@@ -320,7 +320,13 @@ function ethBlockNumberToTimestamp(eth_block) {
   /* blockDate = new Date(web3.eth.getBlock(startBlock-i+1).timestamp*1000); */
   return new Date(Date.now() - ((latest_eth_block - eth_block)*_SECONDS_PER_ETH_BLOCK*1000)).toLocaleString()
 }
-
+function ethBlockNumberToTimestamp2(eth_block) {
+  // Calculate the timestamp for the given Ethereum block number
+  const date = new Date(Date.now() - ((latest_eth_block - eth_block) * _SECONDS_PER_ETH_BLOCK * 1000));
+  
+  // Return the date as a locale-specific string without the time component
+  return date.toLocaleDateString();
+}
 
 /* convert seconds to a short readable string ("1.2 hours", "5.9 months") */
 function secondsToReadableTime(seconds) {
