@@ -761,10 +761,10 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
 			
 			
 			
-			     const smallScreen3 = window.innerWidth < 868;
+			     const smallScreen5 = window.innerWidth < 868;
 
       // Conditionally set the tooltip label based on the screen size
-      if (smallScreen3) {
+      if (smallScreen5) {
 		  console.log("Small screen tooltip");
             label += ' (' + ethBlockNumberToTimestamp2(tooltipItem.xLabel) + ') :  ';
         // Small screen-specific labels
