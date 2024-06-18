@@ -53,6 +53,7 @@ class contractValueOverTime {
     if (storage_data != null) {
       log('read in', storage_data.length, 'cached elements for', this.descriptor);
       last_storage_block = storage_data[storage_data.length - 1][0];
+	 log("LAST BLOCK: ", last_storage_block, " for ", this.descriptor);
     }
 
     // get a data point for the current time (ie. end_block_num), then get remaining data points
@@ -78,7 +79,8 @@ class contractValueOverTime {
     			this.states.push([element[0], new Eth.BN(element[1], 16), '']);
        			this.expected_state_length++;
 			} else {
-				console.error('element is undefined or does not contain the expected properties:', element);
+				console.error('element is undefined or does not contain the expected properties:', element,"  Block_num: ",block_ );
+				this.addValueAtEthBlock(block_num);
 			}
 
       } else { 
@@ -1415,7 +1417,6 @@ last_diff_start_blocks.addValueAtEthBlock(end_eth_block);
  document.getElementById('topText').style.display = 'none';
   era_values.saveToLocalStorage();
 	
-	mining_target_values.saveToLocalStorage();
   last_diff_start_blocks.saveToLocalStorage();
   tokens_minted_values.saveToLocalStorage();
   tokens_price_values.saveToLocalStorage();
