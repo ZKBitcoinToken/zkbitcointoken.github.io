@@ -14,6 +14,7 @@
 //USE value 7979960 for everything
 var ethblockstart = 29444543
 var adjustAverageRewardTimeGraph = 8
+var searchPoints2 = 120
 class contractValueOverTime {
   constructor(eth, contract_address, storage_index, descriptor) {
     /* how long to wait between sequential requests */
@@ -175,9 +176,13 @@ console.log("IS?23 : ",eth_block_num)
     // }
 
   }
+
   areAllValuesLoaded() {
     //log('cv_obj', this.storage_index.padStart(2), ': values loaded: ', this.states.length, '/', this.expected_state_length);
-    return this.expected_state_length == this.states.length;
+	  log("Expected: ",this.expected_state_length ," vs cur Length: ", this.states.length);
+	  log("searchPoints2: ", searchPoints2);
+	  //try making it 120 values only
+    return searchPoints2 == this.states.length;
   }
   async waitUntilLoaded() {
     while (!this.areAllValuesLoaded()) {
@@ -749,7 +754,10 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
         }*/]
     },
 
-    options: {
+    options: { 
+	responsive: true, // Enable responsiveness
+    maintainAspectRatio: true, // Disable maintaining aspect ratio
+  
       tooltips: {
         callbacks: {
           label: function(tooltipItem, data) {
@@ -938,6 +946,8 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
     },
 
     options: {
+	responsive: true, // Enable responsiveness
+    maintainAspectRatio: true, // Disable maintaining aspect ratio
       legend: {
         //display: false,
         labels: {
@@ -1093,6 +1103,8 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
     },
 
     options: {
+	responsive: true, // Enable responsiveness
+    maintainAspectRatio: true, // Disable maintaining aspect ratio
       legend: {
         //display: false,
         labels: {
@@ -1265,6 +1277,8 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
     },
 
     options: {
+	responsive: true, // Enable responsiveness
+    maintainAspectRatio: true, // Disable maintaining aspect ratio
       legend: {
         //display: false,
         labels: {
@@ -1624,7 +1638,7 @@ function updateGraphData(history_days, num_search_points) {
 
     // ignore value passed in, since we assume 24 hour data intervals in other parts of this code
     num_search_points = history_days;   
-
+	searchPoints2 = num_search_points
     let start_eth_block = (latest_eth_block-max_blocks);
 	  if(start_eth_block<29812049){
 			  start_eth_block = 29812049;

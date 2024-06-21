@@ -97,12 +97,12 @@ span.poolname {
   font-weight: 200;
   color: #454d54;
 }
-ul.nav {
+ul.nav2 {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
-li.nav {
+li.nav2 {
   display: inline;
   white-space: nowrap;
 }

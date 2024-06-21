@@ -26,13 +26,9 @@ const _ZERO_BN = new Eth.BN(0, 10);
 const _CONTRACT_NAME = "zkBitcoin";
 const _CONTRACT_SYMBOL = "zkBTC";
 const _CONTRACT_ADDRESS = "0x366d17aDB24A7654DbE82e79F85F9Cb03c03cD0D"; // main zkBTC Contract
-const _CONTRACT_ADDRESS25 = "0x63CFc2Af2b3802a85F03ca500e483d0F28Feb67c"; //helper contract for emergency diff adjustment timer
-
 const _CONTRACT_ADDRESS2 = "0x470ecC269dE29ed2d801ef02c4c95F6e107a64B5"; //auction address
-
 const _USD_ETH_POOL_ADDRESS = "0x80115c708E12eDd42E504c1cD52Aea96C547c05c"; //auction address
 const _POOL_ADDRESS = "0x7002d33c756f593ab41af4a236005766e80dc960"; //auction address
-
 const _CONTRACT_ADDRESS10 = "0x911a89de0430a5ce3699e57d508f8678afa1fffc"; //SUSHISWAP LP
 const _CONTRACT_ADDRESS11 = "0x905dfcd5649217c42684f23958568e533c711aa3"; //SUSHISWAP LP USDC / ETH
 const _CONTRACT_ADDRESS3 = "0x066A7d83C6E5B30fDd9277bA690D598b1653A1A9"; //staking contract for LPers
@@ -42,7 +38,7 @@ const _CONTRACT_ADDRESS6 = "0xAb48108f8A5b42b2C07f818bf38a5175c28b5424"; //staki
 const _CONTRACT_ADDRESS7 = "0x01e648d9d37df577bc3509d4152efc5590bcb832"; //LP token #2 #2 #2
 
 
-const _MINT_TOPIC = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
+const _MINT_TOPIC = "0xcf6fbb9dcea7d07263ab4f5c3a92f53af33dffc421d9d121e1c74b307e68189d";
 const _MAXIMUM_TARGET_STR = "27606985387162255149739023449108101809804435888681546220650096895197184";  // 2**234
 const _MINIMUM_TARGET = 2**16;
 const _ETH_BLOCKS_PER_REWARD = 60 * 6 * 60 / 12 ;  //60 min * 6 hour * 60 sec / 12 sec per block = blocks per
@@ -66,12 +62,9 @@ var eth = new Eth(new Eth.HttpProvider("https://mainnet.era.zksync.io"));
 //   log("warning: no web3 provider found, using infura.io as backup provider")
 // }
 
-
-
 var _BLOCK_EXPLORER_ADDRESS_URL = 'https://era.zksync.network/address/';
 var _BLOCK_EXPLORER_TX_URL = 'https://era.zksync.network/tx/';
 var _BLOCK_EXPLORER_BLOCK_URL = 'https://era.zksync.network/block/';
-
 
 /* colors used by pool names. todo: move to css, still use them for chart.js */
 var pool_colors = {
@@ -97,9 +90,8 @@ var pool_colors = {
 }
 
 var known_miners = {
-  "0x621425a1ef6abe91058e9712575dcc4258f8d091" : [ "SyncSwap LP Pool", "https://syncswap.xyz/pool/0x7002d33C756f593AB41aF4a236005766E80dC960",     pool_colors.blue ], // mint helper contract (old)
-  "0x98181a5f3b91117426331b54e2a47e8fa74f56b0" : [ "zkBitcoin Mining Pool", "http://pool.zkBitcoin.org/",     pool_colors.orange ], // mint helper contract (old)
-  "0x49228d306754af5d16d477149ee50bef5ca286be" : [ "zkBitcoin Mining Pool", "https://pool.zkBitcoin.org/",     pool_colors.orange ], // mint helper contract (old)
+  "0x49228d306754af5d16d477149ee50bef5ca286be" : [ "zkBitcoin Mining Pool", "http://pool.zkBitcoin.org/",     pool_colors.orange ], // mint helper contract (old)
+  "0xce2e772f8bcf36901bacf31dfc67e38954e15754" : [ "Mineable Token Pool", "https://pool.0xmt.com/",     pool_colors.orange ], // mint helper contract (old)
   "0xeabe48908503b7efb090f35595fb8d1a4d55bd66" : [ "ABAS Mining Pool", "http://pool.abastoken.org/",     pool_colors.orange ], // mint helper contract
   "0x53ce57325c126145de454719b4931600a0bd6fc4" : [ "0xPool",            "http://0xPool.io",               pool_colors.purple ], // closed sometime 2018
   "0x98b155d9a42791ce475acc336ae348a72b2e8714" : [ "0xBTCpool",         "http://0xBTCpool.com",           pool_colors.blue ],
@@ -131,8 +123,6 @@ var known_miners = {
 
 
 const token = eth.contract(tokenABI).at(_CONTRACT_ADDRESS);
-const token252525 = eth.contract(tokenABI).at(_CONTRACT_ADDRESS25);
-
 const token2 = eth.contract(tokenABI2).at(_CONTRACT_ADDRESS2); // auction
 const token3 = eth.contract(tokenABI3).at(_CONTRACT_ADDRESS3); //staking
 const token4 = eth.contract(tokenABI4).at(_CONTRACT_ADDRESS4); //lp
@@ -153,15 +143,6 @@ function goToURLAnchor() {
     //$('html, body').animate({scrollTop: targetOffset}, 500);
   } else if (window.location.hash.search('#reward-time') != -1) {
     var targetOffset = $('#row-reward-time').offset().top;
-    $('html, body').animate({scrollTop: targetOffset}, 500);
-  } else if (window.location.hash.search('#price-time') != -1) {
-    var targetOffset = $('#row-price-time').offset().top;
-    $('html, body').animate({scrollTop: targetOffset}, 500);
-  } else if (window.location.hash.search('#rev-time') != -1) {
-    var targetOffset = $('#row-avgRevenue-time').offset().top;
-    $('html, body').animate({scrollTop: targetOffset}, 500);
-  } else if (window.location.hash.search('#price-time') != -1) {
-    var targetOffset = $('#row-price-time').offset().top;
     $('html, body').animate({scrollTop: targetOffset}, 500);
   }else if (window.location.hash.search('#miners') != -1) {
     var targetOffset = $('#row-miners').offset().top;
@@ -253,11 +234,10 @@ stats = [
  ['Mining Difficulty2',             token.reAdjustsToWhatDifficultyAVG,            "",                 1,          null     ], /* mining difficulty */
  ['Estimated Hashrate',            null,                                 "Mh/s",             1,          null     ], /* mining difficulty */
  	['Current Average Reward Time',   null,                                 "minutes",          1,          null     ], /* mining difficulty */
-   ['Reward per Solve',   null,                                 "minutes",          1,          null     ], /* mining difficulty */
+   ['Reward per Solve',   token.getMiningReward,                                _CONTRACT_SYMBOL,          0.000000000000000001,          null     ], /* mining difficulty */
 ['Rewards Until Readjustment',    token.blocksToReadjust,                                 "",                 1,          null     ], /* mining blocks per adjustment MUST KEEP MUST KEEP MUST */  
 
- ['Time Until Emergency Adjustment Activated if all rewards not solved',    token252525.calculateSecondsUntilAdjustmentSwitch,                                 "seconds",              1,          null     ], /* usage */
-
+     
  ['Last Difficulty Start Block',   token.latestDifficultyPeriodStarted,  "",                 1,          null     ], /* mining difficulty */
   ['Last Difficulty Time',   token.latestDifficultyPeriodStarted2,  "",                 1,          null     ], /* mining difficulty */
   ['Target Time',   token.targetTime,  "",                 1,          null     ], /* mining difficulty */
@@ -269,8 +249,8 @@ stats = [
   
 ['Total Supply',                  token.totalSupply,                    _CONTRACT_SYMBOL,   0.000000000000000001, null     ], /* supply */
     
-  ['',                              null,                                 "",                 1,          null     ], /* */
-
+['',                              null,                                 "",                 1,          null     ], /* */
+ 
 // ['Liquidity',                token4.balanceOf,                      "",                 0.000000000000000001,          null     ], /* mining */
  // ['Staking APY',                token4.getReserves,                      "",                 1	,          null     ], /* mining */
 //change variable below to fix stakign APY when ready  
@@ -292,9 +272,7 @@ stats = [
   ['Total Contract Operations',     null,                                 "txs",              1,          null     ], /* usage */
  ['Last Eth Block',                null,                      "",                 1,          null     ], /* mining */
   ['Last ZK Sync Era Block Number',                eth.blockNumber,                      "",                 1,          null     ], /* mining */
- ['SecondsPerDay Auction Contract',     token2.secondsPerDay,                                 "",              1,          null     ], /* usage */
- //['u4',   token4.getReserves,  "",                 1,          null     ], /* mining difficulty */
-  ['',                              null,                                 "",                 1,          null     ], /* */
+ ['',                              null,                                 "",                 1,          null     ], /* */
  
 //['u4',   token4.getReserves,  "",                 1,          null     ], /* mining difficulty */
   ['u5',     null,                                 "txs",              1,          null     ], /* usage */
@@ -308,7 +286,7 @@ stats = [
   ['u99',     token13.getReserves,                                 "ETH",              0.000000000000000001,          null     ], /* usage */
   ['u1010',     token13.getReserves,                                 "USDC",              0.000001,          null     ], /* usage */
 ['',                              null,                                 "",                 1,          null     ], /* */
-
+ 
 ]
 
 var latest_eth_block = null;
@@ -479,11 +457,16 @@ rewards_blocks_remaining_in_era2 = 0
 console.log("current supply_remaining_in_era", supply_remaining_in_era);
 
 
+
+
   fixthis = 0.01
 
   el_safe('#MiningRewardat360minutesSolve').innerHTML = "<b> "+(2800).toLocaleString()+" </b> zkBTC";
   el_safe('#MiningRewardat12minutesSolve').innerHTML = "<b> "+(7).toLocaleString()+" </b> zkBTC";
   el_safe('#StakingAPY').innerHTML = "<b>" + (fixthis).toFixed(0) + " </b> %";
+
+//DO MY STUFF FOR AUCTIONS
+
 
 //DO MY STUFF FOR REST
 
@@ -494,6 +477,7 @@ console.log("current supply_remaining_in_era", supply_remaining_in_era);
 
  	 epoch_old = getValueFromStats('Epoch Old', stats)
 	rewards_since_readjustment = epoch_count - epoch_old
+
 
   circl = getValueFromStats('Tokens distributed via Mining', stats)
   
@@ -582,12 +566,9 @@ var diffTimezzz = (currentTimeInSeconds - tdiffTime ) / rewards_since_readjustme
   seconds_per_reward = diffTimezzz;
 	console.log("Sec two:", seconds_per_reward);
 
-
 var Sec_Per_reward = (currentTimeInSeconds - tdiffTime) / (current_eth_block - difficulty_start_eth_block);
 	console.log("Sec twoTwo:", Sec_Per_reward);
 _SECONDS_PER_ETH_BLOCK = Sec_Per_reward
-
-
   const milliseconds = tdiffTime * 1000;
 
   // Create a new Date object using the milliseconds
@@ -622,34 +603,9 @@ rewards_left = getValueFromStats('Rewards Until Readjustment', stats)
 
 
 
- var  secUntilBlocks = getValueFromStats('Time Until Emergency Adjustment Activated if all rewards not solved', stats)
-
-var indaysTime = secUntilBlocks / (60 * 60 * 24);
-
-var MaxNumber = getValueFromStats('Rewards Until Readjustment', stats) 
-var eCountz = getValueFromStats('Epoch Count', stats) 
-var eCountzOld = getValueFromStats('Epoch Old', stats)
- var NumberToGoLeft =  2048/32 - ((eCountz - eCountzOld) % (2048/32));
-
-if(secUntilBlocks<1){
-    el_safe('#TimeUntilEmergencyAdjustmentActivatedifallrewardsnotsolved').innerHTML =  "<b>Emergency Adjustment Activated "+NumberToGoLeft+" blocks left in adjustment period</b>"
-  el_safe('#RewardsUntilReadjustment').innerHTML = "<b>"+NumberToGoLeft + "</b> blocks" + "<span style='font-size:0.8em;'>(~" + secondsToReadableTime(NumberToGoLeft*seconds_per_reward) + ")</span>";
-  }else{
-      el_safe('#TimeUntilEmergencyAdjustmentActivatedifallrewardsnotsolved').innerHTML =  "<b>"+secondsToReadableTime(secUntilBlocks) + "</b>";
-  el_safe('#RewardsUntilReadjustment').innerHTML += "<span style='font-size:0.8em;'>(~" + secondsToReadableTime(rewards_left*seconds_per_reward) + ")</span>";
-  
-  
-  }
-
-
-
-
 log("22diff", difficulty)
 log("22rewards_since_readjustment", rewards_since_readjustment)
 log("22eth_blocks_since_last_difficulty_period", eth_blocks_since_last_difficulty_period)
-  var new_mining_difficulty = calculateNewMiningDifficulty(difficulty,
-                                                           eth_blocks_since_last_difficulty_period,
-                                                           rewards_since_readjustment);
 
   el_safe('#MiningDifficulty').innerHTML += "  <span style='font-size:0.8em;'>(next: ~" + newDifficulty.toLocaleString() + ")</span>";
   if(mining_calculator_app) {
@@ -669,7 +625,6 @@ rad = totalOwed1 / totalTest
 
 log("mine_length", mine_Length2)
  /*Get Inflation % per year */
-  auction_Length = getValueFromStats('SecondsPerDay Auction Contract', stats)
   last_Block = getValueFromStats('Last ZK Sync Era Block Number', stats)
   block_Then = getValueFromStats('Last Difficulty Start Block', stats) //block not seconds since
   blocks_Total = last_Block - block_Then
@@ -684,7 +639,7 @@ log("EFrom2 : ", epoch_From)
 current_Reward = current_Reward
 
 
-
+/*
 
 
 //Get Current Average reward
@@ -693,7 +648,6 @@ log("xlength2",x)
 
 log("xlength3",x)
 log("xlength4",x)
-/*
 finalx=0
 if(seconds_per_reward > (30 * targetTimez)){
  finalx = (24*x*5086060) / (888) + 3456750000;	
@@ -705,7 +659,6 @@ log("xlengthfinalx", finalx / 100000000 )
 log("xlength", mine_Length2/(48*60))
 
 current_Reward = current_Reward * finalx/100000000
-
 
 */
  rewards_blocks_remaining_in_era = supply_remaining_in_era / current_Reward;
@@ -720,7 +673,7 @@ rewards_blocks_remaining_in_era = rewards_blocks_remaining_in_era.toFixed(0)
   el_safe('#CurrentRewardEra').innerHTML += "<b>0</b> / 39  <span style='font-size:0.8em;'>(next era: ~" + secondsToReadableTime(rewards_blocks_remaining_in_era * seconds_per_reward) + "  @ "+secondsToReadableTime(seconds_per_reward)+" a mint)</div>";
 
 
-el_safe('#RewardPerSolve').innerHTML += "<b> "+current_Reward.toFixed(0) + "</b> zkBTC per solve @ "+ secondsToReadableTime(seconds_per_reward)
+el_safe('#RewardPerSolve').innerHTML = "<b> "+current_Reward.toFixed(0) + "</b> zkBTC per solve"
 
 
   if(mining_calculator_app) {
@@ -736,7 +689,6 @@ el_safe('#TargetTime').innerHTML = "<b>"+targetTimez/60+"</b> minutes";
 //inflation math below
   inflation = ((current_Reward * epoch_From) / seconds_Total ) * year_Time
   inflation = inflation
-log("auction_Length", 32768/auction_Length*year_Time) 
 log("auction_LengthMinedTotal", (3 * (current_Reward * epoch_From) / seconds_Total ) * year_Time)
 log("auction_Length2inflation",inflation) 
 log("inflation",inflation) 
@@ -761,7 +713,6 @@ log("inflationCircl",circl)
   hashrate *= (_IDEAL_BLOCK_TIME_SECONDS / seconds_per_reward);
   setValueInStats('Estimated Hashrate', hashrate, stats);
   el_safe('#EstimatedHashrate').innerHTML = toReadableHashrate(hashrate, true);
-
 
 
 //Stats for Lower part, price, circulating supply $, and market cap $ and LP liquidity
@@ -810,11 +761,6 @@ el_safe('#CurrentCirculatingSupplyinUSD').innerHTML = '<b>' + formattedNumber4 +
 
 el_safe('#MarketCapof21mzkBitcoin').innerHTML = '<b>'+ formattedNumber5 + '</b> $';
 el_safe('#LiquidityofSyncSwapPoolinUSD').innerHTML = '<b>'+ formattedNumber6 + '</b> $';
-
-
-
-
-
 
 
 }
@@ -926,7 +872,7 @@ function getMinerAddressFromTopic(topic) {
 
 
 /* TODO use hours_into_past */
-async function updateAllMinerInfo(eth, stats, hours_into_past){
+function updateAllMinerInfo(eth, stats, hours_into_past){
   log('updateAllMinerInfo');
 
 var totalZKBTC_Mined = [];
@@ -935,8 +881,10 @@ var totalZKBTC_Mined = [];
 var totalZKTC_Calculated = 0;
   /* dict where key=miner_addr and value=total_mined_block_count */
   var miner_block_count = {};
+  var miner_block_count2 = {};
   /* total number of blocks mined since last difficulty adjustment */
   var total_block_count = 0;
+  var total_tx_count = 0;
   var last_imported_mint_block = 0;
 
   var last_reward_eth_block = getValueFromStats('Last ZK Sync Era Block Number', stats)
@@ -947,23 +895,34 @@ var totalZKTC_Calculated = 0;
   // check to see if the browser has any data in localStorage we can use.
   // don't use the data, though, if it's from an old difficulty period
   try {
-    var last_diff_block_storage = Number(localStorage.getItem('lastDifficultyStartBlock_EraBitcoinfffFF'));
-    last_imported_mint_block = Number(localStorage.getItem('lastMintBlock_EraBitcoinfffFF'));
-    var mint_data = localStorage.getItem('mintData_EraBitcoinfffFF');
-
+    var last_diff_block_storage = Number(localStorage.getItem('lastDifficultyStartBlock_EraBitcoin_afbRAFFABC'));
+    last_imported_mint_block = Number(localStorage.getItem('lastMintBlock_EraBitcoin_afbRAFFABC'));
+    var mint_data = localStorage.getItem('mintData_EraBitcoin_afbRAFFABC');
 
 //FUCK THIS LINE    if (mint_data !== null && last_diff_block_storage == last_difficulty_start_block) {
-    if (mint_data !== null) {
+      if (mint_data !== null) {
       mined_blocks = JSON.parse(mint_data);
-      total_block_count = mined_blocks.length;
-      log('imported', total_block_count, 'transactions from localStorage');
+      log('imported', mined_blocks.length, 'transactions from localStorage');
       mined_blocks.forEach(function(mintData) {
 
 
         if (miner_block_count[mintData[2]] === undefined) {
-          miner_block_count[mintData[2]] = 1;
+          miner_block_count[mintData[2]] =  mintData[3]/50;
+          miner_block_count2[mintData[2]] =  1;
         } else {
-          miner_block_count[mintData[2]]++;
+          miner_block_count[mintData[2]]+=  mintData[3]/50;
+          miner_block_count2[mintData[2]]+=  1;
+        }
+	if(mintData[3] !=0){
+	    total_tx_count+=1;
+	}
+
+        if (total_block_count == 0) {
+          total_block_count =  mintData[3]/50;
+		
+        } else {
+          total_block_count+=  mintData[3]/50;
+		
         }
 
         if (totalZKBTC_Mined[mintData[2]] === undefined) {
@@ -980,7 +939,7 @@ var totalZKTC_Calculated = 0;
     last_imported_mint_block = 0;
     mined_blocks.length = 0;
   }
-var nonew =false;
+
   var start_log_search_at = Math.max(ethblockstart +0, last_imported_mint_block + 1);
     last_reward_eth_block = last_reward_eth_block - 2
 
@@ -990,80 +949,67 @@ var nonew =false;
   log("searching last_reward_eth_block", last_reward_eth_block, "blocks");
   log("searching last", last_reward_eth_block - start_log_search_at, "blocks");
 
-  log("searching last", last_reward_eth_block - start_log_search_at, "blocks"); 
-  var blocks_to_search = (current_eth_block - start_log_search_at)
-  log('blocks to search', blocks_to_search);
-  var stop_log_search_at_loop = 0
-  var start_log_search_at_loop = start_log_search_at;
-  var iterations = Math.ceil((blocks_to_search / 500000));
-  if (iterations <= 0) {
-    iterations = 1
-  }
-  log('do', iterations, 'runs');
-  var run = 0
-  while (run < iterations) {
-    log('run', run + 1);
-    start_log_search_at_loop = start_log_search_at + (run * 500000)
-    run++;
-    stop_log_search_at_loop = start_log_search_at_loop + 499999
-    log('searching from block', start_log_search_at_loop, 'to block', stop_log_search_at_loop);
-    //
   /* get all mint() transactions in the last N blocks */
   /* more info: https://github.com/ethjs/ethjs/blob/master/docs/user-guide.md#ethgetlogs */
   /* and https://ethereum.stackexchange.com/questions/12950/what-are-event-topics/12951#12951 */
-  await eth.getLogs({
-    fromBlock: start_log_search_at_loop,
-    toBlock: stop_log_search_at_loop,
+  eth.getLogs({
+    fromBlock: start_log_search_at,
+    toBlock: last_reward_eth_block,
     address: _CONTRACT_ADDRESS,
     topics: [_MINT_TOPIC, null],
   })
   .then((result) => {
 
     log("got filter results:", result.length, "transactions");
+   // total_block_count += result.length;
+
 // Output the result
     result.forEach(function(transaction){
       var tx_hash = transaction['transactionHash'];
       var block_number = parseInt(transaction['blockNumber'].toString());
       var miner_address = getMinerAddressFromTopic(transaction['topics'][1].toString());
-     var to_address = getMinerAddressFromTopic(transaction['topics'][2].toString());
       var data3345345 = transaction['data'];
-	//console.log("DATA32423, ", data3345345.substring(2, 66));
+	console.log("DATA32423, ", data3345345.substring(2, 66));
 	var dataAmt = parseInt(data3345345.substring(2, 66), 16) / (10.0 ** 18);
-//console.log("DATAAMT: ", dataAmt);
+console.log("DATAAMT: ", dataAmt);
       // log('tx_hash=', tx_hash);
       // log('  block=', block_number);
       // log('  miner=', miner_address)
-	if(miner_address !=_CONTRACT_ADDRESS.toLowerCase()  && miner_address != _CONTRACT_ADDRESS2.toLowerCase() && miner_address != "0x0000000000000000000000000000000000000000"  && miner_address != "0x49228d306754af5d16d477149ee50bef5ca286be" && miner_address != "0x98181a5f3b91117426331b54e2a47e8fa74f56b0"){
-	      mined_blocks.unshift([block_number, tx_hash, miner_address, dataAmt,to_address])
-	nonew=true;
+
+      mined_blocks.unshift([block_number, tx_hash, miner_address, dataAmt])
+
       if(miner_block_count[miner_address] === undefined) {
-	total_block_count+=1;
-        miner_block_count[miner_address] = 1;
+        miner_block_count[miner_address] = dataAmt/50;
+        miner_block_count2[miner_address] = 1;
 	totalZKBTC_Mined[miner_address] = dataAmt;
 	totalZKTC_Calculated += dataAmt;
       } else {
-        miner_block_count[miner_address] += 1;
+        miner_block_count[miner_address] += dataAmt/50;
+        miner_block_count2[miner_address] += 1;
 	totalZKBTC_Mined[miner_address] += dataAmt;
-	total_block_count+=1;
 	totalZKTC_Calculated += dataAmt;
       }
+        if (total_block_count == 0) {
+          total_block_count =   dataAmt/50;
+	if(dataAmt !=0){
+		total_tx_count=1;
+	}
+
+	if(dataAmt !=0){
+	    total_tx_count+=1;
+	}
+        } else {
+          total_block_count+=   dataAmt/50;
+	if(dataAmt !=0){
+		total_tx_count+=1;
+	}
 	}
     });
 
-	})  
-.catch((error) => {
-    log('error filtering txs:', error);
-     log('error filtering txs:', error);
-     log('repeat run', run);
-     run = run - 1
-     sleep(500)
-  });
-  
-  }
-    if (nonew) {
-      localStorage.setItem('mintData_EraBitcoinfffFF', JSON.stringify(mined_blocks));
-      localStorage.setItem('lastMintBlock_EraBitcoinfffFF', mined_blocks[0][0]);
-      localStorage.setItem('lastDifficultyStartBlock_EraBitcoinfffFF', last_difficulty_start_block.toString());
+    if (result.length > 0) {
+      localStorage.setItem('mintData_EraBitcoin_afbRAFFABC', JSON.stringify(mined_blocks));
+      localStorage.setItem('lastMintBlock_EraBitcoin_afbRAFFABC', mined_blocks[0][0]);
+      localStorage.setItem('lastDifficultyStartBlock_EraBitcoin_afbRAFFABC', last_difficulty_start_block.toString());
     }
 
     log("processed blocks:",
@@ -1082,6 +1028,7 @@ var nonew =false;
            && known_miners[m2] !== undefined
            && known_miners[m1][0] == known_miners[m2][0]) {
           miner_block_count[m1] += miner_block_count[m2];
+          miner_block_count2[m1] += miner_block_count2[m2];
           miner_block_count[m2] = 0;
           totalZKBTC_Mined[m1] += totalZKBTC_Mined[m2];
           totalZKBTC_Mined[m2] = 0;
@@ -1094,12 +1041,23 @@ var nonew =false;
       if(miner_block_count[miner_addr] == 0) {
         delete miner_block_count[miner_addr]
       }
+    });    /* delete miners with zero blocks (due to collapse op above) */
+    Object.keys(miner_block_count2).forEach((miner_addr) => {
+      if(miner_block_count2[miner_addr] == 0) {
+        delete miner_block_count[miner_addr]
+      }
+    });
+    /* delete miners with zero blocks (due to collapse op above) */
+    Object.keys(totalZKBTC_Mined).forEach((miner_addr) => {
+      if(totalZKBTC_Mined[miner_addr] == 0) {
+        delete totalZKBTC_Mined[miner_addr]
+      }
     });
 
     /* create sorted list of miners */
     sorted_miner_block_count = []
     for(var m in miner_block_count) {
-      sorted_miner_block_count.push([m, miner_block_count[m], totalZKBTC_Mined[m]]);
+      sorted_miner_block_count.push([m, miner_block_count[m], totalZKBTC_Mined[m], miner_block_count2[m]]);
     }
     /* descending */
     sorted_miner_block_count.sort((a, b) => {return b[1] - a[1];});
@@ -1113,13 +1071,14 @@ var nonew =false;
       backgroundColor: [],
       label: 'miner-data'
     };
-    var innerhtml_buffer = '<tr><th>Miner</th><th>Transaction Count</th>'
-      + '<th>% of Total</th><th>Total zkBitcoin transfered By User</th></tr>';
+    var innerhtml_buffer = '<tr><th>Miner</th><th>Total Epochs Minted Count</th>'
+      + '<th>% of Minted</th><th>Transaction Count</th><th>TOTAL ZK Bitcoin Mined By User</th></tr>';
     sorted_miner_block_count.forEach(function(miner_info) {
       var addr = miner_info[0];
       var blocks = miner_info[1];
 
 	var RewardAmount = miner_info[2].toFixed(0);
+	var TotalBlocksPerReward = miner_info[3].toFixed(0);
       var miner_name_link = getMinerNameLinkHTML(addr, known_miners);
       var percent_of_total_blocks = blocks/total_block_count;
 
@@ -1128,17 +1087,16 @@ var nonew =false;
       piechart_labels.push(getMinerName(addr, known_miners))
 
 const formattedNumberfffff2 = new Intl.NumberFormat(navigator.language).format(RewardAmount);
-     innerhtml_buffer += '<tr><td>'
+      innerhtml_buffer += '<tr><td>'
         + miner_name_link + '</td><td>'
         + blocks + '</td><td>'
-        + (100*percent_of_total_blocks).toFixed(2) + '%' + '</td><th>'+formattedNumberfffff2+' zkBitcoin</th></tr>';
+        + (100*percent_of_total_blocks).toFixed(2) + '%' + '</td><td>'+TotalBlocksPerReward+'</td><th>'+formattedNumberfffff2+' zkBitcoin</th></tr>';
     });
 const formattedNumberfffff23 = new Intl.NumberFormat(navigator.language).format(totalZKTC_Calculated.toFixed(0));
 
     /* add the last row (totals) */
     innerhtml_buffer += '<tr><td style="border-bottom: 0rem;"></td><td style="border-bottom: 0rem;">'
-      + total_block_count + '</td><td style="border-bottom: 0rem;"></td>'
-      + '<td style="border-bottom: 0rem;">'+formattedNumberfffff23+' zkBitcoin</td></tr>';4
+      + total_block_count + '</td><td style="border-bottom: 0rem;"></td><td style="border-bottom: 0rem;"></td><td style="border-bottom: 0rem;">'+formattedNumberfffff23+' zkBitcoin</td></tr>';
     el('#minerstats').innerHTML = innerhtml_buffer;
     log('done populating miner stats');
     // $(window).hide().show(0);
@@ -1161,18 +1119,15 @@ const formattedNumberfffff23 = new Intl.NumberFormat(navigator.language).format(
     /* fill in block info */
     var dt = new Date();
     var innerhtml_buffer = '<tr><th>Time (Approx)</th><th>zkSync Era Block #</th>'
-      + '<th>Transaction Hash</th><th>Sender</th><th>Reciever</th><th>Reward Amount</th></tr>';
+      + '<th>Transaction Hash</th><th>Miner</th><th>Reward Amount</th></tr>';
     mined_blocks.forEach(function(block_info) {
       var eth_block = parseInt(block_info[0]);
       var tx_hash = block_info[1];
       var addr = block_info[2];
-	var dataF = block_info[3].toFixed(1);
+	var dataF = block_info[3].toFixed(4);
 
 const formattedNumberfffff = new Intl.NumberFormat(navigator.language).format(dataF);
-	var addrTo = block_info[4];
       var miner_name_link = getMinerNameLinkHTML(addr, known_miners);
-
-      var miner_name_link_To = getMinerNameLinkHTML(addrTo, known_miners);
 
       var transaction_url = _BLOCK_EXPLORER_TX_URL + tx_hash;
       var block_url = _BLOCK_EXPLORER_BLOCK_URL + eth_block;
@@ -1184,15 +1139,18 @@ const formattedNumberfffff = new Intl.NumberFormat(navigator.language).format(da
         + '<a href="' + block_url + '" target="_blank">' + eth_block + '</td><td>'
         + '<a href="' + transaction_url + '" title="' + tx_hash + '" target="_blank">'
         + tx_hash.substr(0, 16) + '...</a></td><td align="right" style="text-overflow:ellipsis;white-space: nowrap;overflow: hidden;">'
-        + miner_name_link + '</td><td align="right" style="text-overflow:ellipsis;white-space: nowrap;overflow: hidden;">'
-        + miner_name_link_To + '</td><td>'+ formattedNumberfffff +" zkBTC</td></tr>";
+        + miner_name_link + '</td><td>'	+ formattedNumberfffff +" zkBTC</td></tr>";
         //+ '</a></td></tr>';
     });
     el('#blockstats').innerHTML = innerhtml_buffer;
     log('done populating block stats');
 
     goToURLAnchor();
-  
+  })
+  .catch((error) => {
+    log('error filtering txs:', error);
+  });
+
 
 }
 
@@ -1383,7 +1341,6 @@ function updateStatsTable(stats){
       return function(result) {
         try {
 	
-	
 	if(stat_name=="u77" || stat_name=="u99" || stat_name=="Pool 3 Num2 Token"){
 		xx = 1
 
@@ -1464,5 +1421,4 @@ function updateAndDisplayAllStats() {
   createStatsTable();
   loadAllStats();
 }
-
 
