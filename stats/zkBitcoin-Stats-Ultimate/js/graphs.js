@@ -664,7 +664,6 @@ if(eras_per_block_data[i].x > ethblockstart){
   /* figure out how to scale chart: difficulty can be too high or too low */
   var max_difficulty_value = 0
   for (var i = 0; i < difficulty_data.length; i += 1) {
-var max_difficulty_value = 0
 try{
     if (difficulty_data[i].y.toNumber() > max_difficulty_value) {
       max_difficulty_value = difficulty_data[i].y.toNumber();
@@ -684,7 +683,10 @@ console.log("max_hashrate_value ", hashrate_data[i].y)
       max_hashrate_value = hashrate_data[i].y;
     }
   }
-	  
+	  // Check if the last value in hashrate_data is 0 and remove it if true
+if (hashrate_data.length > 0 && hashrate_data[hashrate_data.length - 1].y === 0) {
+    hashrate_data.pop();
+}
 	  
 	    var max_rev = 0
 
