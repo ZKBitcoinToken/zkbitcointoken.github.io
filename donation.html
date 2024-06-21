@@ -346,13 +346,17 @@
 
         getBalances();    
     </script>
-<footer id="footer.dark taz"> 
+
+  
+  <footer id="footer.dark taz"> 
           <div class="container">
             <div class="row" >
                 <div class="col-sm-6 col-md-3 item">
-                     <h3>Add Token to MetaMask</h3>
+                     <h5>Add Token to MetaMask</h5>
                             
-                                   <button type="button" class="zenableEthereumButton22 btn btn-hover color-1 glowing addedstylebutton">Add zkBitcoin Tokens</button><br>  
+				<div style="width: 100%; display: inline-block;">
+    <button type="button" class="zenableEthereumButton22 btn btn-hover color-1 glowing addedstylebutton" style="width: 100%; font-size: 90%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Add zkBitcoin Tokens</button><br>
+</div>
                                    <script>
                                     let accounts = [];
                                     //Sending Ethereum to an address
@@ -453,362 +457,6 @@
                                   
 
                                     
-                                        <script>
-
-                                    
-  //Sending Ethereum to an address
-  //
-  const vvethereumButton22ffff = document.querySelector('.zenableEthereumButton222');
-  
-  vvethereumButton22ffff.addEventListener('click', () => {
- 
-    vvgetAccount22ffff();
-
-  });
-  
-  
-  async function getAccount() {
-    accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-    showAccount.innerHTML = accounts;
-   console.log(accounts);
-  }
-
-    async function vvgetAccount22ffff() {
-             
-                                       
-                                            
-                                             try {
-                                              await ethereum.request({
-                                                method: 'wallet_switchEthereumChain',
-                                                params: [{ chainId: '0x144' }],
-                                              });
-                                            } catch (switchError) {
-                                              // This error code indicates that the chain has not been added to MetaMask.
-                                              if (switchError.code === 4902) {
-                                                try {
-                                                  await ethereum.request({
-                                                    method: 'wallet_addEthereumChain',
-                                                    params: [{ chainId: '0x144', 
-                                                    chainName: 'zkSync Era',
-                                                    nativeCurrency: {
-                                                        name: 'Ethereum',
-                                                        symbol: 'ETH', // 2-6 characters long
-                                                        decimals: 18
-                                                    },
-                                                    blockExplorerUrls: ['https://explorer.zksync.io/'],
-                                                    rpcUrls: ['https://mainnet.era.zksync.io'] }],
-                                                  });
-                                                } catch (addError) {
-                                                  // handle "add" error
-                                                }
-                                              }
-                                              // handle other "switch" errors
-                                            }		
-                                                    
-                                            await new Promise(r => setTimeout(r, 20));
-                                            accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-                                            const tokenAddress2 = '0xa0E1d12603EA3E256aA52AaB96271e97dC66ED7a';
-                                            const tokenSymbol2 = 'm0xBTC';
-                                            const tokenDecimals2 = 8;
-                                            const tokenImage2 = 'https://zkbitcoin.org/img/0xbitcoin.png';
-        
-                                                                                               
-                                                                                                 
-                                            
-                                            try {
-                                              // wasAdded is a boolean. Like any RPC method, an error may be thrown.
-                                              const wasAdded = await ethereum.request({
-                                                method: 'wallet_watchAsset',
-                                                params: {
-                                                  type: 'ERC20', // Initially only supports ERC20, but eventually more!
-                                                  options: {
-                                                    address: tokenAddress2, // The address that the token is at.
-                                                    symbol: tokenSymbol2, // A ticker symbol or shorthand, up to 5 chars.
-                                                    decimals: tokenDecimals2,  // The number of decimals in the token
-                                                    image: tokenImage2, // A string url of the token logo
-        
-                                                  },
-                                                },
-                                              });
-
-                                              if (wasAdded) {
-                                        console.log('Thanks for your interest!');
-                                      } else {
-                                        console.log('Your loss!');
-                                      }
-                                    } catch (error) {
-                                      console.log(error);
-                                    }
-                                        }
-                                    </script>
-
-                                    
-                                        <script>
-
-                                    
-  //Sending Ethereum to an address
-  //
-  const ethereumButton22ffff = document.querySelector('.zenableEthereumButton2222');
-  
-  ethereumButton22ffff.addEventListener('click', () => {
- 
-    getAccount22ffff();
-
-  });
-  
-  
-  async function getAccount() {
-    accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-    showAccount.innerHTML = accounts;
-   console.log(accounts);
-  }
-
-    async function getAccount22ffff() {
-             
-                                               
-                                          try {
-                                              await ethereum.request({
-                                                method: 'wallet_switchEthereumChain',
-                                                params: [{ chainId: '0x144' }],
-                                              });
-                                            } catch (switchError) {
-                                              // This error code indicates that the chain has not been added to MetaMask.
-                                              if (switchError.code === 4902) {
-                                                try {
-                                                  await ethereum.request({
-                                                    method: 'wallet_addEthereumChain',
-                                                    params: [{ chainId: '0x144', 
-                                                    chainName: 'zkSync Era',
-                                                    nativeCurrency: {
-                                                        name: 'Ethereum',
-                                                        symbol: 'ETH', // 2-6 characters long
-                                                        decimals: 18
-                                                    },
-                                                    blockExplorerUrls: ['https://explorer.zksync.io/'],
-                                                    rpcUrls: ['https://mainnet.era.zksync.io'] }],
-                                                  });
-                                                } catch (addError) {
-                                                  // handle "add" error
-                                                }
-                                              }
-                                              // handle other "switch" errors
-                                            }		
-                                                    
-                                            await new Promise(r => setTimeout(r, 20));
-                                            accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-                                            const tokenAddress2 = '0xBA6d9490927F71069c676f251060913b095a5741';
-                                            const tokenSymbol2 = '0xBTC/zkBTC';
-                                            const tokenDecimals2 = 18;
-                                            const tokenImage2 = 'https://zkbitcoin.org/img/syncswap.png';
-        
-                                                                                                      
-                                            
-                                            try {
-                                              // wasAdded is a boolean. Like any RPC method, an error may be thrown.
-                                              const wasAdded = await ethereum.request({
-                                                method: 'wallet_watchAsset',
-                                                params: {
-                                                  type: 'ERC20', // Initially only supports ERC20, but eventually more!
-                                                  options: {
-                                                    address: tokenAddress2, // The address that the token is at.
-                                                    symbol: tokenSymbol2, // A ticker symbol or shorthand, up to 5 chars.
-                                                    decimals: tokenDecimals2,  // The number of decimals in the token
-                                                    image: tokenImage2, // A string url of the token logo
-        
-                                                  },
-                                                },
-                                              });
-
-                                              if (wasAdded) {
-                                        console.log('Thanks for your interest!');
-                                      } else {
-                                        console.log('Your loss!');
-                                      }
-                                    } catch (error) {
-                                      console.log(error);
-                                    }
-                                        }
-                                    </script>
-
-    
-                                    <script>
-
-                                    
-                                    //Sending Ethereum to an address
-                                    //
-                                    const ethereumButtonabcDF = document.querySelector('.zenableEthereumButtonabcDF');
-                                    
-                                    ethereumButtonabcDF.addEventListener('click', () => {
-                                   
-                                      getAccountabcDF();
-                                
-                                    });
-                                    
-                                    
-                                    async function getAccount() {
-                                      accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-                                      showAccount.innerHTML = accounts;
-                                     console.log(accounts);
-                                    }
-
-                                      async function getAccountabcDF() {
-                                            
-                                        
-                                                  
-                                          try {
-                                              await ethereum.request({
-                                                method: 'wallet_switchEthereumChain',
-                                                params: [{ chainId: '0x144' }],
-                                              });
-                                            } catch (switchError) {
-                                              // This error code indicates that the chain has not been added to MetaMask.
-                                              if (switchError.code === 4902) {
-                                                try {
-                                                  await ethereum.request({
-                                                    method: 'wallet_addEthereumChain',
-                                                    params: [{ chainId: '0x144', 
-                                                    chainName: 'zkSync Era',
-                                                    nativeCurrency: {
-                                                        name: 'Ethereum',
-                                                        symbol: 'ETH', // 2-6 characters long
-                                                        decimals: 18
-                                                    },
-                                                    blockExplorerUrls: ['https://explorer.zksync.io/'],
-                                                    rpcUrls: ['https://mainnet.era.zksync.io'] }],
-                                                  });
-                                                } catch (addError) {
-                                                  // handle "add" error
-                                                }
-                                              }
-                                              // handle other "switch" errors
-                                            }		
-                                                    
-                                            await new Promise(r => setTimeout(r, 20));
-                                            accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-                                            const tokenAddress2 = '0xe21010cdA483ac1Ae6375e5D50dB2293307C4b60';
-                                            const tokenSymbol2 = 'ETH/zkBTC';
-                                            const tokenDecimals2 = 18;
-                                            const tokenImage2 = 'https://zkbitcoin.org/img/syncswap.png';
-        
-                                                                                               
-                                            
-                                                                                               
-                                            
-                                            try {
-                                              // wasAdded is a boolean. Like any RPC method, an error may be thrown.
-                                              const wasAdded = await ethereum.request({
-                                                method: 'wallet_watchAsset',
-                                                params: {
-                                                  type: 'ERC20', // Initially only supports ERC20, but eventually more!
-                                                  options: {
-                                                    address: tokenAddress2, // The address that the token is at.
-                                                    symbol: tokenSymbol2, // A ticker symbol or shorthand, up to 5 chars.
-                                                    decimals: tokenDecimals2,  // The number of decimals in the token
-                                                    image: tokenImage2, // A string url of the token logo
-        
-                                                  },
-                                                },
-                                              });
-
-                                              if (wasAdded) {
-                                        console.log('Thanks for your interest!');
-                                      } else {
-                                        console.log('Your loss!');
-                                      }
-                                    } catch (error) {
-                                      console.log(error);
-                                    }
-                                        }
-                                    </script>
-                                    <script>
-
-                                    
-                                    //Sending Ethereum to an address
-                                    //
-                                    const ethereumButtonabcDF = document.querySelector('.zenableEthereumButtonabcDF');
-                                    
-                                    ethereumButtonabcDF.addEventListener('click', () => {
-                                   
-                                      getAccountabcDF();
-                                
-                                    });
-                                    
-                                    
-                                    async function getAccount() {
-                                      accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-                                      showAccount.innerHTML = accounts;
-                                     console.log(accounts);
-                                    }
-
-                                      async function getAccountabcDF() {
-                                            
-                                        
-                                            
-                                            try {
-                                              await ethereum.request({
-                                                method: 'wallet_switchEthereumChain',
-                                                params: [{ chainId: '0xA4B1' }],
-                                              });
-                                            } catch (switchError) {
-                                              // This error code indicates that the chain has not been added to MetaMask.
-                                              if (switchError.code === 4902) {
-                                                try {
-                                                  await ethereum.request({
-                                                    method: 'wallet_addEthereumChain',
-                                                    params: [{ chainId: '0xA4B1', 
-                                                    chainName: 'Arbitrum One',
-                                                    nativeCurrency: {
-                                                        name: 'Ethereum',
-                                                        symbol: 'ETH', // 2-6 characters long
-                                                        decimals: 18
-                                                    },
-                                                    blockExplorerUrls: ['https://arbiscan.io/'],
-                                                    rpcUrls: ['https://arb1.arbitrum.io/rpc'] }],
-                                                  });
-                                                } catch (addError) {
-                                                  // handle "add" error
-                                                }
-                                              }
-                                              // handle other "switch" errors
-                                            }		
-                                                    
-                                            await new Promise(r => setTimeout(r, 20));
-                                            accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-                                            const tokenAddress2 = '0x01e648d9d37df577bc3509d4152efc5590bcb832';
-                                            const tokenSymbol2 = 'ABAS LP 2';
-                                            const tokenDecimals2 = 18;
-                                            const tokenImage2 = 'https://abastoken.org/img/sushiswap-sushi-logo.png';
-        
-                                                                                               
-                                            
-                                            try {
-                                              // wasAdded is a boolean. Like any RPC method, an error may be thrown.
-                                              const wasAdded = await ethereum.request({
-                                                method: 'wallet_watchAsset',
-                                                params: {
-                                                  type: 'ERC20', // Initially only supports ERC20, but eventually more!
-                                                  options: {
-                                                    address: tokenAddress2, // The address that the token is at.
-                                                    symbol: tokenSymbol2, // A ticker symbol or shorthand, up to 5 chars.
-                                                    decimals: tokenDecimals2,  // The number of decimals in the token
-                                                    image: tokenImage2, // A string url of the token logo
-        
-                                                  },
-                                                },
-                                              });
-
-                                              if (wasAdded) {
-                                        console.log('Thanks for your interest!');
-                                      } else {
-                                        console.log('Your loss!');
-                                      }
-                                    } catch (error) {
-                                      console.log(error);
-                                    }
-                                        }
-                                    </script>
-
-
 
 			</ul></div>
                         
@@ -818,29 +466,47 @@
                 <div class="col-sm-6 col-md-3 item">
                     <h3>About</h3>
                     <ul>
-                        <li><a href="howtomine.html">How to Mine</a></li>
-                        <li><a href="whitepaper.html">Whitepaper</a></li>
-                        <li><a href="team.html">Contact Us</a></li>
+                        <li><a href="https://zkbitcoin.org/howtomine.html">How to Mine</a></li>
+                        <li><a href="https://zkbitcoin.org/whitepaper.html">Whitepaper</a></li>
+                        <li><a href="https://zkbitcoin.org/team.html">Contact Us</a></li>
                     </ul>
                 </div>
                 
-                <div class="col-md-6 item text">
-                    <h3>zkBitcoin</h3>
-                    <h5>A new way to DEFI. Mine it yourself with your GPU/FPGA/ASIC miner!! All decentralized!!</h5>
-                </div>
-                <div class="col item">
-                    <a href="https://t.me/zkBitcoinToken" aria-label="Telegram">
-                  <i class="fa fa-telegram zeropadding"></i></a>
-                    <a href="https://twitter.com/zkBitcoinToken/" aria-label="Twitter">
-                  <i class="fa fa-twitter zeropadding"></i></a>
-                    <a href="https://medium.com/@zkBitcoinToken/" aria-label="Medium">  
-                  <i class="fa fa-medium zeropadding"></i></a>
-                    <a href="https://github.com/ZKBitcoinToken" aria-label="Github">  
-                  <i class="fa fa-github zeropadding"></i></a>
-                    <a href="https://discord.gg/dNKbmFvvJU" aria-label="Discord">  
-                  <i class="">Join Our Discord</i></a></div>
-            </div>
-        </div>
+                <div style="display: flex; flex-direction: column; align-items: center;">
+    <div style="width: 100%; text-align: left; margin-bottom: 20px;">
+        <h3>zkBitcoin</h3>
+        <h5>A new way to DEFI. Mine it yourself with your GPU/FPGA/ASIC miner!! All decentralized!!</h5>
+    </div>
+    <div style="width: 100%; text-align: left; margin-bottom: 5px;">
+        <a href="https://t.me/zkBitcoinToken" aria-label="Telegram">
+            <i class="fa fa-telegram zeropadding"></i>
+      <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0;url=/stats/zkBitcoin-Stats-Ultimate/?page=stats&">
+    <title>Redirecting...</title>
+</head>
+<body>
+    <p>If you are not redirected automatically, follow this <a href="https://www.example.com">link to the new page</a>.</p>
+</body>
+</html>
+
+  </a>
+        <a href="https://twitter.com/zkBitcoinToken/" aria-label="Twitter">
+            <i class="fa fa-twitter zeropadding"></i>
+        </a>
+        <a href="https://medium.com/@zkBitcoinToken/" aria-label="Medium">
+            <i class="fa fa-medium zeropadding"></i>
+        </a>
+        <a href="https://github.com/ZKBitcoinToken" aria-label="Github">
+            <i class="fa fa-github zeropadding"></i>
+        </a>
+        <a href="https://discord.gg/dNKbmFvvJU" aria-label="Discord">
+            <i class="">Join Our Discord</i>
+        </a>
+    </div>
+</div>
 <footer>
 </body>
 
