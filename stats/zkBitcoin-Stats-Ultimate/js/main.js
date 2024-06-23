@@ -1094,6 +1094,7 @@ var totalZKTC_Calculated = 0;
           miner_block_count[m1] += miner_block_count[m2];
           miner_block_count2[m1] += miner_block_count2[m2];
           miner_block_count[m2] = 0;
+          miner_block_count2[m2] = 0;
           totalZKBTC_Mined[m1] += totalZKBTC_Mined[m2];
           totalZKBTC_Mined[m2] = 0;
         }
