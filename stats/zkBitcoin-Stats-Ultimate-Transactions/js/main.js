@@ -1083,7 +1083,6 @@ var nonew =false;
            && known_miners[m1][0] == known_miners[m2][0]) {
           miner_block_count[m1] += miner_block_count[m2];
           miner_block_count[m2] = 0;
-          miner_block_count2[m2] = 0;
           totalZKBTC_Mined[m1] += totalZKBTC_Mined[m2];
           totalZKBTC_Mined[m2] = 0;
         }
