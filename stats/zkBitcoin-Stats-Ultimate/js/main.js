@@ -277,6 +277,8 @@ stats = [
  ['',                              null,                                 "",                 1,          null     ], /* */
  
 ['Token Holders',                 null,                                 "holders",          1,          null     ], /* usage */
+	
+ ['Successful Mint Transactions',       null,                                 "txs",   1, null     ], /* mining */
   ['Token Transfers',               null,                                 "transfers",        1,          null     ], /* usage */
   ['Total Contract Operations',     null,                                 "txs",              1,          null     ], /* usage */
  ['Last Eth Block',                null,                      "",                 1,          null     ], /* mining */
@@ -1159,6 +1161,7 @@ const formattedNumberfffff2 = new Intl.NumberFormat(navigator.language).format(R
     });
 const formattedNumberfffff23 = new Intl.NumberFormat(navigator.language).format(totalZKTC_Calculated.toFixed(0));
 
+  el_safe('#SuccessfulMintTransactions').innerHTML = "<b> "+(total_tx_count).toLocaleString()+" </b> txs";
     /* add the last row (totals) */
     innerhtml_buffer += '<tr><td style="border-bottom: 0rem;"></td><td style="border-bottom: 0rem;">'
       + total_block_count + '</td><td style="border-bottom: 0rem;"></td><td style="border-bottom: 0rem;">' + total_tx_count + '</td><td style="border-bottom: 0rem;">'+formattedNumberfffff23+' zkBitcoin</td></tr>';
