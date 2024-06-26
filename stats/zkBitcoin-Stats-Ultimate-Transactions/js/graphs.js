@@ -1605,6 +1605,7 @@ last_diff_start_blocks.addValueAtEthBlock(end_eth_block);
   //era_values.deleteLastPointIfZero();
   generateHashrateAndBlocktimeGraph(eth, mining_target_values, era_values, tokens_price_values, tokens_price_values2, tokens_price_values3, tokens_price_values4, tokens_minted_values);
  document.getElementById('topText').style.display = 'none';
+ document.getElementById('topText2').style.display = 'none';
   era_values.saveToLocalStorage();
 	
   last_diff_start_blocks.saveToLocalStorage();
