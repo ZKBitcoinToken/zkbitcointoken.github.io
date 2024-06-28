@@ -860,7 +860,7 @@ function showBlockDistributionPieChart(piechart_dataset, piechart_labels) {
 }
 
 function showBlockDistributionPieChart2(piechart_dataset, piechart_labels) {
-  //console.log('dataset', piechart_dataset);
+  console.log('dataset', piechart_dataset);
   el('#blockdistributionpiechart2').innerHTML = '<canvas id="chart-block-distribution2" width="2rem" height="2rem"></canvas>';
 
   if(piechart_dataset.length == 0 || piechart_labels.length == 0) {
@@ -901,8 +901,16 @@ function getMinerColor(address, known_miners) {
   if(known_miners[address] !== undefined) {
     var hexcolor = known_miners[address][2];
   } else {
-    hexcolor = 'hsl(' + (simpleHash(2, address) % 360) + ', 48%, 30%)';
+	  var test = (simpleHash(2, address) % 360)
+	  if((simpleHash(2, address) % 360) < 0){
+		  test = (simpleHash(2, address) % 360) + 360
+		  
+	  }
+    hexcolor = 'hsl(' + test + ', 48%, 30%)';
   }
+	if(address == "0xfaf20e5ca7e39d43a3aabc450602b4147c3aa62e"){
+	console.log("hex color: ", hexcolor);
+	}
   return hexcolor;
 }
 
@@ -916,6 +924,9 @@ function getMinerName(address, known_miners) {
 
 function getMinerNameLinkHTML(address, known_miners) {
   var hexcolor = getMinerColor(address, known_miners);
+	if(address == "0xfaf20e5ca7e39d43a3aabc450602b4147c3aa62e"){
+	console.log("Link HTML Color: ", hexcolor);
+	}
   var poolstyle = '<span style="background-color: ' + hexcolor + ';" class="poolname">';
 
   if(known_miners[address] !== undefined) {
@@ -1280,9 +1291,10 @@ var total_TOTAL_mint_count_HASH = 0;
 	var TotalBlocksPerReward = miner_info[3].toFixed(0);
       var miner_name_link = getMinerNameLinkHTML(addr, known_miners);
       var percent_of_total_blocks = blocks/total_TOTAL_mint_count_HASH;
-
+	var test= getMinerColor(addr, known_miners);
       piechart_dataset2.data.push(blocks);
-      piechart_dataset2.backgroundColor.push(getMinerColor(addr, known_miners))
+		console.log("Miner color: ",test, " miner ", addr);
+      piechart_dataset2.backgroundColor.push(test)
       piechart_labels2.push(getMinerName(addr, known_miners))
 
 const formattedNumberfffff2 = new Intl.NumberFormat(navigator.language).format(RewardAmount);
@@ -1408,16 +1420,24 @@ const formattedNumberparzedint = new Intl.NumberFormat(navigator.language).forma
 			  }
 				  innerhtml_buffer = finalstr;
 
-			if(eth_block > 29444550){
-							innerhtml_buffer  += '<tr><td align="right" style="text-overflow:ellipsis;white-space: nowrap;overflow: hidden; font-size: 120%;">'
-							+ get_date_from_eth_block(eth_block) + '</td><td style="font-size: 120%;">'
-							+ '<b>New difficulty period</b>' + '</td><td style="font-size: 120%;">'
-							+ '<b>New Challenge</b>'
-							+ '</td><td style="font-size: 120%;">'
-							+ '<b> Previous Period had</b></td><td style="font-size: 120%;">'
-							+ '<b>PeriodNumberperiod Mints</b></td></tr>';
-							//+ '</a></td></tr>';
-							totalzkBTCMinted = 1.0;
+					if(eth_block > 29444550){
+
+								 innerhtml_buffer  += '<tr><td align="right" style="text-overflow:ellipsis;white-space: nowrap;overflow: hidden;">'
+								+ get_date_from_eth_block(eth_block) + '</td><td>'
+								+ '<b>New difficulty period</b>' + '</td><td>'
+								+ '<b>New Challenge</b>'
+								+ '</td><td><b> Previous Period had</b></td><td><b>PeriodNumberperiod Mints</b></td></tr>';
+								//+ '</a></td></tr>';
+								 totalzkBTCMinted = 1.0;
+			}else{
+				 				innerhtml_buffer  += '<tr><td align="right" style="text-overflow:ellipsis;white-space: nowrap;overflow: hidden;">'
+								+ get_date_from_eth_block(eth_block) + '</td><td>'
+								+ '<b>New difficulty period</b>' + '</td><td>'
+								+ '<b>New Challenge</b>'
+								+ '</td><td><b> Previous Period had</b></td><td><b>0 Mints</b></td></tr>';
+								//+ '</a></td></tr>';
+								 totalzkBTCMinted = 1.0;
+				
 			}
 		}else
 		{
