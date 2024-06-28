@@ -1100,9 +1100,20 @@ var total_TOTAL_mint_count_HASH = 0;
 		
 	var Challengerz = data3345345.substring(130, 194);
 		if(previousChallenge != Challengerz){
+			var previousChallenge2 = previousChallenge;
 			console.log("Old challenge: ", previousChallenge, " new challenge: ", Challengerz);
 			previousChallenge = Challengerz;
-      		mined_blocks.unshift([mined_blocks[0][0], tx_hash, miner_address, -1])
+			if(previousChallenge2 !== undefined && previousChallenge2 !== null){
+			
+						var newBlock = [
+							mined_blocks[0] && mined_blocks[0][0] !== undefined ? mined_blocks[0][0] : block_number,
+							tx_hash,
+							miner_address,
+							-1
+						];
+					
+					mined_blocks.unshift(newBlock);
+			}
 			
 		}
 		//one shift to define a challenge change then another for the actual amount mined after the chal change
