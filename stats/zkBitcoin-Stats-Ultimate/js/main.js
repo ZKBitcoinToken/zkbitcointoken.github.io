@@ -859,6 +859,35 @@ function showBlockDistributionPieChart(piechart_dataset, piechart_labels) {
   });
 }
 
+function showBlockDistributionPieChart2(piechart_dataset, piechart_labels) {
+  //console.log('dataset', piechart_dataset);
+  el('#blockdistributionpiechart2').innerHTML = '<canvas id="chart-block-distribution2" width="2rem" height="2rem"></canvas>';
+
+  if(piechart_dataset.length == 0 || piechart_labels.length == 0) {
+    return;
+  }
+
+  //Chart.defaults.global.elements.arc.backgroundColor = 'rgba(255,0,0,1)';
+  Chart.defaults.global.elements.arc.borderColor = 'rgb(32, 34, 38)';
+  Chart.defaults.global.elements.arc.borderWidth = 3;
+
+  /* hashrate and difficulty chart */
+  var hr_diff_chart = new Chart(document.getElementById('chart-block-distribution2').getContext('2d'), {
+    type: 'doughnut',
+
+    data: {
+        datasets: [piechart_dataset],
+        labels: piechart_labels,
+    },
+
+    options: {
+      legend: {
+        display: false,
+      },
+    },
+  });
+}
+
 function getMinerColor(address, known_miners) {
   function simpleHash(seed, string) {
     var h = seed;
@@ -913,18 +942,22 @@ function getMinerAddressFromTopic(topic) {
 async function updateAllMinerInfo(eth, stats, hours_into_past){
   log('updateAllMinerInfo');
 
+ var previousChallenge = "0x0";
 var totalZKBTC_Mined = [];
   /* array of arrays of type [eth_block, txhash, miner_addr] */
   var mined_blocks = [];
 var totalZKTC_Calculated = 0;
+	var totalZKBTC_Mined_HASH = 0;
   /* dict where key=miner_addr and value=total_mined_block_count */
   var miner_block_count = {};
   var miner_block_count2 = {};
+  var miner_block_countHASH = {};
   /* total number of blocks mined since last difficulty adjustment */
+  var total_mint_count_HASH = {};
   var total_block_count = 0;
   var total_tx_count = 0;
   var last_imported_mint_block = 0;
-
+var total_TOTAL_mint_count_HASH = 0;
   var last_reward_eth_block = getValueFromStats('Last ZK Sync Era Block Number', stats)
   var current_eth_block = getValueFromStats('Last ZK Sync Era Block Number', stats)
   var estimated_network_hashrate = getValueFromStats('Estimated Hashrate', stats)
@@ -935,6 +968,8 @@ var totalZKTC_Calculated = 0;
   try {
     var last_diff_block_storage = Number(localStorage.getItem('lastDifficultyStartBlock_EraBitcoin_afbRAFFABC'));
     last_imported_mint_block = Number(localStorage.getItem('lastMintBlock_EraBitcoin_afbRAFFABC'));
+    previousChallenge = JSON.parse(localStorage.getItem('mintData_GreekWedding'));
+	  console.log("previous ended challenge is this, starting here");
     var mint_data = localStorage.getItem('mintData_EraBitcoin_afbRAFFABC');
 
 //FUCK THIS LINE    if (mint_data !== null && last_diff_block_storage == last_difficulty_start_block) {
@@ -942,8 +977,29 @@ var totalZKTC_Calculated = 0;
       mined_blocks = JSON.parse(mint_data);
       log('imported', mined_blocks.length, 'transactions from localStorage');
       mined_blocks.forEach(function(mintData) {
+		if(mintData[3] == -1){return;}
+		  
+		 if(mintData[3] !=0 && mintData[0] > last_difficulty_start_block){
+				if (miner_block_countHASH[mintData[2]] === undefined) {
+				  miner_block_countHASH[mintData[2]] = mintData[3];
+				} else {
+				  miner_block_countHASH[mintData[2]]+= mintData[3];
+				}
+			if ( total_mint_count_HASH[mintData[2]] ===  undefined) {
+			  total_mint_count_HASH[mintData[2]] =  1;
 
+			} else {
+			  total_mint_count_HASH[mintData[2]]+=  1;
 
+			}
+			 total_TOTAL_mint_count_HASH+=mintData[3]/50;
+			 
+			 totalZKBTC_Mined_HASH[mintData[2]] += mintData[3]/50;
+
+			 
+			 
+		 }
+		  
         if (miner_block_count[mintData[2]] === undefined) {
           miner_block_count[mintData[2]] =  mintData[3]/50;
           miner_block_count2[mintData[2]] =  1;
@@ -994,6 +1050,7 @@ var totalZKTC_Calculated = 0;
   if (iterations <= 0) {
     iterations = 1
   }
+ var firstRun = 1;
   log('do', iterations, 'runs');
   var run = 0
   while (run < iterations) {
@@ -1016,7 +1073,6 @@ var totalZKTC_Calculated = 0;
 
     log("got filter results:", result.length, "transactions");
    // total_block_count += result.length;
-
 // Output the result
     result.forEach(function(transaction){
       var tx_hash = transaction['transactionHash'];
@@ -1025,13 +1081,46 @@ var totalZKTC_Calculated = 0;
       var data3345345 = transaction['data'];
 	//console.log("DATA32423, ", data3345345.substring(2, 66));
 	var dataAmt = parseInt(data3345345.substring(2, 66), 16) / (10.0 ** 18);
+	
 //console.log("DATAAMT: ", dataAmt);
       // log('tx_hash=', tx_hash);
       // log('  block=', block_number);
       // log('  miner=', miner_address)
-
+		
+	var Challengerz = data3345345.substring(130, 194);
+		if(previousChallenge != Challengerz){
+			console.log("Old challenge: ", previousChallenge, " new challenge: ", Challengerz);
+			previousChallenge = Challengerz;
+      		mined_blocks.unshift([mined_blocks[0][0], tx_hash, miner_address, -1])
+			
+		}
+		//one shift to define a challenge change then another for the actual amount mined after the chal change
       mined_blocks.unshift([block_number, tx_hash, miner_address, dataAmt])
+		
+		if(dataAmt !=0 && block_number > last_difficulty_start_block ){
+			
+			 total_TOTAL_mint_count_HASH+=dataAmt/50;
+			 if(miner_block_countHASH[miner_address] === undefined) {
+				miner_block_countHASH[miner_address] = dataAmt;
+			  } else {
+				  	console.log("Before : ",miner_address ," CountHash: ",miner_block_countHASH[miner_address]," adding ", dataAmt);
+				  	
+				miner_block_countHASH[miner_address] += dataAmt;
+				  	console.log("after: ",miner_address ," CountHash: ",miner_block_countHASH[miner_address]);
+			  }
+			
+			if ( total_mint_count_HASH[miner_address] ===  undefined) {
+			  total_mint_count_HASH[miner_address] =  1;
 
+			} else {
+			  total_mint_count_HASH[miner_address]+=  1;
+
+			}
+			totalZKBTC_Mined_HASH[miner_address] += dataAmt/50;
+			
+		}
+		
+		
       if(miner_block_count[miner_address] === undefined) {
         miner_block_count[miner_address] = dataAmt/50;
         miner_block_count2[miner_address] = 1;
@@ -1045,19 +1134,16 @@ var totalZKTC_Calculated = 0;
       }
         if (total_block_count == 0) {
           total_block_count =   dataAmt/50;
-	if(dataAmt !=0){
-		total_tx_count=1;
-	}
+			if(dataAmt !=0){
+				total_tx_count=1;
+			}
 
-	if(dataAmt !=0){
-	    total_tx_count+=1;
-	}
         } else {
           total_block_count+=   dataAmt/50;
-	if(dataAmt !=0){
-		total_tx_count+=1;
-	}
-	}
+			if(dataAmt !=0){
+				total_tx_count+=1;
+			}
+		}
     });
 	
   
@@ -1074,6 +1160,7 @@ var totalZKTC_Calculated = 0;
   }
     if (run > 0) {
       localStorage.setItem('mintData_EraBitcoin_afbRAFFABC', JSON.stringify(mined_blocks));
+      localStorage.setItem('mintData_GreekWedding', JSON.stringify(previousChallenge));
       localStorage.setItem('lastMintBlock_EraBitcoin_afbRAFFABC', mined_blocks[0][0]);
       localStorage.setItem('lastDifficultyStartBlock_EraBitcoin_afbRAFFABC', last_difficulty_start_block.toString());
     }
@@ -1108,7 +1195,50 @@ var totalZKTC_Calculated = 0;
       if(miner_block_count[miner_addr] == 0) {
         delete miner_block_count[miner_addr]
       }
-    });    /* delete miners with zero blocks (due to collapse op above) */
+    });
+	
+	log("processed blocks:",
+      Object.keys(miner_block_countHASH).length,
+      "unique miners");
+
+    /* collapse miner_block_count using known_miners who have multiple
+       address into a single address */
+    for(var m1 in miner_block_countHASH) {
+      for(var m2 in miner_block_countHASH) {
+        if(m1 === m2) {
+          continue;
+        }
+        if(known_miners[m1] !== undefined
+           && known_miners[m2] !== undefined
+           && known_miners[m1][0] == known_miners[m2][0]) {
+          miner_block_countHASH[m1] += miner_block_countHASH[m2];
+			total_mint_count_HASH[m1] += total_mint_count_HASH[m2];
+			total_mint_count_HASH[m2]=0;
+          miner_block_countHASH[m2] = 0;
+        }
+      }
+    }
+
+    /* delete miners with zero blocks (due to collapse op above) */
+    Object.keys(miner_block_countHASH).forEach((miner_addr) => {
+      if(miner_block_countHASH[miner_addr] == 0) {
+        delete miner_block_countHASH[miner_addr]
+      }
+    });
+    /* delete miners with zero blocks (due to collapse op above) */
+    Object.keys(total_mint_count_HASH).forEach((miner_addr) => {
+      if(total_mint_count_HASH[miner_addr] == 0) {
+        delete total_mint_count_HASH[miner_addr]
+      }
+    });
+	
+	
+	
+	
+	
+	
+	
+	/* delete miners with zero blocks (due to collapse op above) */
     Object.keys(miner_block_count2).forEach((miner_addr) => {
       if(miner_block_count2[miner_addr] == 0) {
         delete miner_block_count[miner_addr]
@@ -1121,7 +1251,58 @@ var totalZKTC_Calculated = 0;
       }
     });
 
-    /* create sorted list of miners */
+    /* create sorted list of RECENT miners */
+    sorted_miner_block_count_recent_hash = []
+    for(var m in miner_block_countHASH) {
+      sorted_miner_block_count_recent_hash.push([m, miner_block_countHASH[m]/50, miner_block_countHASH[m], total_mint_count_HASH[m]]);
+    }
+    /* descending */
+    sorted_miner_block_count_recent_hash.sort((a, b) => {return b[1] - a[1];});
+
+    log('done sorting Recent miner info');
+	
+	
+	
+	 /* fill in miner info */
+    var piechart_labels2 = [];
+    var piechart_dataset2 = {
+      data: [],
+      backgroundColor: [],
+      label: 'miner-data2'
+    };
+    var innerhtml_buffer2 = '<tr><th>Miner</th><th>Recent Epochs Minted Count</th>'
+      + '<th>% of Minted</th><th>Recent Miner Hashrate</th><th>Transaction Count</th><th>Recent zkBitcoin Mined By User</th></tr>';
+    sorted_miner_block_count_recent_hash.forEach(function(miner_info) {
+      var addr = miner_info[0];
+      var blocks = miner_info[1];
+	console.log("miner info: ", miner_info);
+	var RewardAmount = miner_info[2].toFixed(0);
+	var TotalBlocksPerReward = miner_info[3].toFixed(0);
+      var miner_name_link = getMinerNameLinkHTML(addr, known_miners);
+      var percent_of_total_blocks = blocks/total_TOTAL_mint_count_HASH;
+
+      piechart_dataset2.data.push(blocks);
+      piechart_dataset2.backgroundColor.push(getMinerColor(addr, known_miners))
+      piechart_labels2.push(getMinerName(addr, known_miners))
+
+const formattedNumberfffff2 = new Intl.NumberFormat(navigator.language).format(RewardAmount);
+      innerhtml_buffer2 += '<tr><td>'
+        + miner_name_link + '</td><td>'
+        + blocks + '</td><td>'
+        + (100*percent_of_total_blocks).toFixed(2) + '%' + '</td><td style="white-space: nowrap;">'+ toReadableHashrate(percent_of_total_blocks*estimated_network_hashrate, false)+ '</td><td>'+TotalBlocksPerReward+'</td><th>'+formattedNumberfffff2+' zkBitcoin</th></tr>';
+    });
+	
+	el('#minerstats2').innerHTML = innerhtml_buffer2;
+    log('done populating RECENT miner stats');
+    // $(window).hide().show(0);
+    // $(window).trigger('resize');
+
+    showBlockDistributionPieChart2(piechart_dataset2, piechart_labels2);
+
+	
+	
+	
+    /* create sorted list of ALL MINTS of miners */
     sorted_miner_block_count = []
     for(var m in miner_block_count) {
       sorted_miner_block_count.push([m, miner_block_count[m], totalZKBTC_Mined[m], miner_block_count2[m]]);
@@ -1139,7 +1320,7 @@ var totalZKTC_Calculated = 0;
       label: 'miner-data'
     };
     var innerhtml_buffer = '<tr><th>Miner</th><th>Total Epochs Minted Count</th>'
-      + '<th>% of Minted</th><th>Transaction Count</th><th>TOTAL ZK Bitcoin Mined By User</th></tr>';
+      + '<th>% of Minted</th><th>Transaction Count</th><th>TOTAL zkBitcoin Mined By User</th></tr>';
     sorted_miner_block_count.forEach(function(miner_info) {
       var addr = miner_info[0];
       var blocks = miner_info[1];
@@ -1183,7 +1364,7 @@ const formattedNumberfffff23 = new Intl.NumberFormat(navigator.language).format(
 
       return new Date(date_of_last_mint.getTime() - ((last_reward_eth_block - eth_block)*_SECONDS_PER_ETH_BLOCK*1000)).toLocaleString('en-US', options);
     }
-
+	var totalzkBTCMinted = 1.0000;
     /* fill in block info */
     var dt = new Date();
     var innerhtml_buffer = '<tr><th>Time (Approx)</th><th>zkSync Era Block #</th>'
@@ -1193,22 +1374,63 @@ const formattedNumberfffff23 = new Intl.NumberFormat(navigator.language).format(
       var tx_hash = block_info[1];
       var addr = block_info[2];
 	var dataF = block_info[3].toFixed(4);
-
+		
+			 totalzkBTCMinted += parseFloat(dataF);
 const formattedNumberfffff = new Intl.NumberFormat(navigator.language).format(dataF);
+const formattedNumbertotalzkBTCMinted = new Intl.NumberFormat(navigator.language).format(totalzkBTCMinted);
       var miner_name_link = getMinerNameLinkHTML(addr, known_miners);
 
       var transaction_url = _BLOCK_EXPLORER_TX_URL + tx_hash;
       var block_url = _BLOCK_EXPLORER_BLOCK_URL + eth_block;
 
       //log('hexcolor:', hexcolor, address_url);
+		if(formattedNumberfffff == -1 ){
+			
+				
+				
 
-      innerhtml_buffer  += '<tr><td>'
-        + get_date_from_eth_block(eth_block) + '</td><td>'
-        + '<a href="' + block_url + '" target="_blank">' + eth_block + '</td><td>'
-        + '<a href="' + transaction_url + '" title="' + tx_hash + '" target="_blank">'
-        + tx_hash.substr(0, 16) + '...</a></td><td align="right" style="text-overflow:ellipsis;white-space: nowrap;overflow: hidden;">'
-        + miner_name_link + '</td><td>'	+ formattedNumberfffff +" zkBTC</td></tr>";
-        //+ '</a></td></tr>';
+			var parzedint = parseInt(totalzkBTCMinted/50);
+const formattedNumberparzedint = new Intl.NumberFormat(navigator.language).format(parzedint);
+
+
+				var finalstr="";
+				// The substring to find and the replacement value
+				const searchString = "PeriodNumberperiod";
+			str = innerhtml_buffer;
+			  const lastIndex = str.lastIndexOf(searchString);
+			  if (lastIndex === -1) {
+				finalstr = str;
+			  }else{
+
+				  const before = str.substring(0, lastIndex);
+				  const after = str.substring(lastIndex + searchString.length);
+				  finalstr = before + formattedNumberparzedint + after;
+			  }
+				  innerhtml_buffer = finalstr;
+
+			if(eth_block > 29444550){
+							innerhtml_buffer  += '<tr><td align="right" style="text-overflow:ellipsis;white-space: nowrap;overflow: hidden; font-size: 120%;">'
+							+ get_date_from_eth_block(eth_block) + '</td><td style="font-size: 120%;">'
+							+ '<b>New difficulty period</b>' + '</td><td style="font-size: 120%;">'
+							+ '<b>New Challenge</b>'
+							+ '</td><td style="font-size: 120%;">'
+							+ '<b> Previous Period had</b></td><td style="font-size: 120%;">'
+							+ '<b>PeriodNumberperiod Mints</b></td></tr>';
+							//+ '</a></td></tr>';
+							totalzkBTCMinted = 1.0;
+			}
+		}else
+		{
+			
+		  innerhtml_buffer  += '<tr><td align="right" style="text-overflow:ellipsis;white-space: nowrap;overflow: hidden;">'
+			+ get_date_from_eth_block(eth_block) + '</td><td>'
+			+ '<a href="' + block_url + '" target="_blank">' + eth_block + '</td><td>'
+			+ '<a href="' + transaction_url + '" title="' + tx_hash + '" target="_blank">'
+			+ tx_hash.substr(0, 16) + '...</a></td><td align="right" style="text-overflow:ellipsis;white-space: nowrap;overflow: hidden;">'
+			+ miner_name_link + '</td><td>'	+ formattedNumberfffff +" zkBTC</td></tr>";
+			//+ '</a></td></tr>';
+			
+		}
     });
     el('#blockstats').innerHTML = innerhtml_buffer;
     log('done populating block stats');
@@ -1296,7 +1518,6 @@ function getMinerInfoCSV(eth, stats, hours_into_past){
     });
     //el('#blockstats').innerHTML = csv_text;
     log('done');
-
     // Start file download.
     downloadTextAsFile("zkBitcoin-blocks" + date_now.toLocaleTimeString() + ".csv",
                        csv_text);
