@@ -1283,8 +1283,9 @@ var total_TOTAL_mint_count_HASH = 0;
 
     log('done sorting Recent miner info');
 	
-	
-	
+	var totalBlockszzz =0;
+	var a_formattedNumberfffff2 = 0;
+	var totalblockz = 0;
 	 /* fill in miner info */
     var piechart_labels2 = [];
     var piechart_dataset2 = {
@@ -1307,13 +1308,23 @@ var total_TOTAL_mint_count_HASH = 0;
 		console.log("Miner color: ",test, " miner ", addr);
       piechart_dataset2.backgroundColor.push(test)
       piechart_labels2.push(getMinerName(addr, known_miners))
-
+	totalBlockszzz+=parseFloat(TotalBlocksPerReward);
+		totalblockz+=parseFloat(blocks);
+		a_formattedNumberfffff2+=parseFloat(RewardAmount);
 const formattedNumberfffff2 = new Intl.NumberFormat(navigator.language).format(RewardAmount);
       innerhtml_buffer2 += '<tr><td>'
         + miner_name_link + '</td><td>'
         + blocks + '</td><td>'
         + (100*percent_of_total_blocks).toFixed(2) + '%' + '</td><td style="white-space: nowrap;">'+ toReadableHashrate(percent_of_total_blocks*estimated_network_hashrate, false)+ '</td><td>'+TotalBlocksPerReward+'</td><th>'+formattedNumberfffff2+' zkBitcoin</th></tr>';
     });
+	
+const formattedNumberfffff2FFFF = new Intl.NumberFormat(navigator.language).format(a_formattedNumberfffff2);
+	
+      innerhtml_buffer2 += '<tr><td style="border-bottom: 0rem;">TOTAL:'
+		+ '</td><td style="border-bottom: 0rem;">'
+        + totalblockz + '</td><td style="border-bottom: 0rem;">'
+        + '100%' + '</td><td style="border-bottom: 0rem;">'+ toReadableHashrate(estimated_network_hashrate, false)+ '</td><td style="border-bottom: 0rem;">'+totalBlockszzz+'</td><td style="border-bottom: 0rem;">'+formattedNumberfffff2FFFF+' zkBitcoin</td></tr>';
+	
 	
 	el('#minerstats2').innerHTML = innerhtml_buffer2;
     log('done populating RECENT miner stats');
@@ -1367,8 +1378,8 @@ const formattedNumberfffff23 = new Intl.NumberFormat(navigator.language).format(
 
   el_safe('#SuccessfulMintTransactions').innerHTML = "<b> "+(total_tx_count).toLocaleString()+" </b> txs";
     /* add the last row (totals) */
-    innerhtml_buffer += '<tr><td style="border-bottom: 0rem;"></td><td style="border-bottom: 0rem;">'
-      + total_block_count + '</td><td style="border-bottom: 0rem;"></td><td style="border-bottom: 0rem;">' + total_tx_count + '</td><td style="border-bottom: 0rem;">'+formattedNumberfffff23+' zkBitcoin</td></tr>';
+    innerhtml_buffer += '<tr><td style="border-bottom: 0rem;">TOTAL:</td><td style="border-bottom: 0rem;">'
+      + total_block_count + '</td><td style="border-bottom: 0rem;">100%</td><td style="border-bottom: 0rem;">' + total_tx_count + '</td><td style="border-bottom: 0rem;">'+formattedNumberfffff23+' zkBitcoin</td></tr>';
     el('#minerstats').innerHTML = innerhtml_buffer;
     log('done populating miner stats');
     // $(window).hide().show(0);
