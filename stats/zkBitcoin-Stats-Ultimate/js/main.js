@@ -860,7 +860,7 @@ function showBlockDistributionPieChart(piechart_dataset, piechart_labels) {
 }
 
 function showBlockDistributionPieChart2(piechart_dataset, piechart_labels) {
-  console.log('dataset', piechart_dataset);
+  //console.log('dataset', piechart_dataset);
   el('#blockdistributionpiechart2').innerHTML = '<canvas id="chart-block-distribution2" width="2rem" height="2rem"></canvas>';
 
   if(piechart_dataset.length == 0 || piechart_labels.length == 0) {
@@ -909,7 +909,7 @@ function getMinerColor(address, known_miners) {
     hexcolor = 'hsl(' + test + ', 48%, 30%)';
   }
 	if(address == "0xfaf20e5ca7e39d43a3aabc450602b4147c3aa62e"){
-	console.log("hex color: ", hexcolor);
+	//console.log("hex color: ", hexcolor);
 	}
   return hexcolor;
 }
@@ -925,7 +925,7 @@ function getMinerName(address, known_miners) {
 function getMinerNameLinkHTML(address, known_miners) {
   var hexcolor = getMinerColor(address, known_miners);
 	if(address == "0xfaf20e5ca7e39d43a3aabc450602b4147c3aa62e"){
-	console.log("Link HTML Color: ", hexcolor);
+	//console.log("Link HTML Color: ", hexcolor);
 	}
   var poolstyle = '<span style="background-color: ' + hexcolor + ';" class="poolname">';
 
@@ -1125,10 +1125,10 @@ var total_TOTAL_mint_count_HASH = 0;
 			 if(miner_block_countHASH[miner_address] === undefined) {
 				miner_block_countHASH[miner_address] = dataAmt;
 			  } else {
-				  	console.log("Before : ",miner_address ," CountHash: ",miner_block_countHASH[miner_address]," adding ", dataAmt);
+				  	//console.log("Before : ",miner_address ," CountHash: ",miner_block_countHASH[miner_address]," adding ", dataAmt);
 				  	
 				miner_block_countHASH[miner_address] += dataAmt;
-				  	console.log("after: ",miner_address ," CountHash: ",miner_block_countHASH[miner_address]);
+				  	//console.log("after: ",miner_address ," CountHash: ",miner_block_countHASH[miner_address]);
 			  }
 			
 			if ( total_mint_count_HASH[miner_address] ===  undefined) {
@@ -1219,7 +1219,7 @@ var total_TOTAL_mint_count_HASH = 0;
       }
     });
 	
-	log("processed blocks:",
+	log("processed Recent miner blocks:",
       Object.keys(miner_block_countHASH).length,
       "unique miners");
 
@@ -1298,14 +1298,14 @@ var total_TOTAL_mint_count_HASH = 0;
     sorted_miner_block_count_recent_hash.forEach(function(miner_info) {
       var addr = miner_info[0];
       var blocks = miner_info[1];
-	console.log("miner info: ", miner_info);
+	//console.log("miner info: ", miner_info);
 	var RewardAmount = miner_info[2].toFixed(0);
 	var TotalBlocksPerReward = miner_info[3].toFixed(0);
       var miner_name_link = getMinerNameLinkHTML(addr, known_miners);
       var percent_of_total_blocks = blocks/total_TOTAL_mint_count_HASH;
 	var test= getMinerColor(addr, known_miners);
       piechart_dataset2.data.push(blocks);
-		console.log("Miner color: ",test, " miner ", addr);
+		//console.log("Miner color: ",test, " miner ", addr);
       piechart_dataset2.backgroundColor.push(test)
       piechart_labels2.push(getMinerName(addr, known_miners))
 	totalBlockszzz+=parseFloat(TotalBlocksPerReward);
