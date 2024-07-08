@@ -766,7 +766,7 @@ const priceOf1ETHinUSDC = tokensUSDC_Pool2 / tokensETH_Pool2;
 const priceOf1ZkBTCinUSDC = priceOf1ZkBTCinETH * priceOf1ETHinUSDC;
 const circUSD = total_Minted * priceOf1ZkBTCinUSDC;
 const maxSupplyUSD = 21000000 * priceOf1ZkBTCinUSDC
-const priceof1 = priceOf1ZkBTCinUSDC.toFixed(7);
+const priceof1 = priceOf1ZkBTCinUSDC.toFixed(4);
 	console.log("PriceOF1 : ",priceof1);
 // Assuming tknZKBTC is your number
 const tknZKBTC = tokensZKBTC_Pool1.toFixed(0);
@@ -775,6 +775,10 @@ const cirlUSDP = circUSD.toFixed(0);
 const maxSup = maxSupplyUSD.toFixed(0);
 // Format number according to the user's locale
 const formattedNumber = new Intl.NumberFormat(navigator.language).format(priceof1);
+const formattedNumberpriceof1.toLocaleString(undefined, {
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 4
+});
 const USDinPool = priceOf1ETHinUSDC * tknETH_p1; 
 const USDinPool2 = tknZKBTC * priceOf1ZkBTCinUSDC;
 // Format number according to the user's locale
@@ -793,7 +797,7 @@ console.log("Formatted Number: ", formattedNumber2);
 USDPOOLzzzz = USDPOOLz.toFixed(0)
 // Format number according to the user's locale
 const formattedNumber6 = new Intl.NumberFormat(navigator.language).format(USDPOOLzzzz);
-  el_safe('#Priceof1zkBitcoinToken').innerHTML = '<b>' + formattedNumber + '</b> $';
+  el_safe('#Priceof1zkBitcoinToken').innerHTML = '<b>' + formattedNumberpriceof1 + '</b> $';
 el_safe('#LiquidityofSyncSwapPool').innerHTML = '<b>' + formattedNumber2 + '</b> zkBTC and <b>'+ formattedNumber3+'</b> ETH';
 el_safe('#CurrentCirculatingSupplyinUSD').innerHTML = '<b>' + formattedNumber4 + "</b> $";
 
