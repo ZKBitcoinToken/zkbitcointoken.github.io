@@ -1,4 +1,4 @@
-
+Of1
 function addToURL(value){
   if (history.pushState) {
     var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + value;
@@ -768,7 +768,7 @@ const priceOf1ZkBTCinUSDC = priceOf1ZkBTCinETH * priceOf1ETHinUSDC;
 const circUSD = total_Minted * priceOf1ZkBTCinUSDC;
 const maxSupplyUSD = 21000000 * priceOf1ZkBTCinUSDC
 const priceof1 = priceOf1ZkBTCinUSDC.toFixed(7);
-	console.log("PriceOF1 : ",priceOf1);
+	console.log("PriceOF1 : ",priceof1);
 // Assuming tknZKBTC is your number
 const tknZKBTC = tokensZKBTC_Pool1.toFixed(0);
 const tknETH_p1 = tokensETH_Pool1.toFixed(4);
