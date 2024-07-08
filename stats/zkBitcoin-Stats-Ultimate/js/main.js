@@ -1,4 +1,3 @@
-Of1
 function addToURL(value){
   if (history.pushState) {
     var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + value;
