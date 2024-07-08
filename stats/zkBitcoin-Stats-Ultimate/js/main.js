@@ -767,7 +767,7 @@ const priceOf1ETHinUSDC = tokensUSDC_Pool2 / tokensETH_Pool2;
 const priceOf1ZkBTCinUSDC = priceOf1ZkBTCinETH * priceOf1ETHinUSDC;
 const circUSD = total_Minted * priceOf1ZkBTCinUSDC;
 const maxSupplyUSD = 21000000 * priceOf1ZkBTCinUSDC
-const priceof1 = priceOf1ZkBTCinUSDC.toFixed(8);
+const priceof1 = priceOf1ZkBTCinUSDC.toFixed(7);
 // Assuming tknZKBTC is your number
 const tknZKBTC = tokensZKBTC_Pool1.toFixed(0);
 const tknETH_p1 = tokensETH_Pool1.toFixed(4);
