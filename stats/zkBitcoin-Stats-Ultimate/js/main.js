@@ -775,7 +775,7 @@ const cirlUSDP = circUSD.toFixed(0);
 const maxSup = maxSupplyUSD.toFixed(0);
 // Format number according to the user's locale
 const formattedNumber = new Intl.NumberFormat(navigator.language).format(priceof1);
-const formattedNumberpriceof1.toLocaleString(undefined, {
+const formattedNumberpriceof1 = priceof1.toLocaleString(undefined, {
   minimumFractionDigits: 0,
   maximumFractionDigits: 4
 });
