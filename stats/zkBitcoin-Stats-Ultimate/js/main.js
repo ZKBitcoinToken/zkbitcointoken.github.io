@@ -1149,27 +1149,24 @@ var total_TOTAL_mint_count_HASH = 0;
 		
       if(miner_block_count[miner_address] === undefined) {
         miner_block_count[miner_address] = dataAmt/50;
-        miner_block_count2[miner_address] = 1;
+	if(dataAmt !=0){
+     		miner_block_count2[miner_address] = 1;
+	}
 	totalZKBTC_Mined[miner_address] = dataAmt;
 	totalZKTC_Calculated += dataAmt;
       } else {
         miner_block_count[miner_address] += dataAmt/50;
-        miner_block_count2[miner_address] += 1;
+	if(dataAmt !=0){
+        	miner_block_count2[miner_address] += 1;
+	}
 	totalZKBTC_Mined[miner_address] += dataAmt;
 	totalZKTC_Calculated += dataAmt;
       }
-        if (total_block_count == 0) {
-          total_block_count =   dataAmt/50;
-			if(dataAmt !=0){
-				total_tx_count=1;
-			}
-
-        } else {
-          total_block_count+=   dataAmt/50;
-			if(dataAmt !=0){
-				total_tx_count+=1;
-			}
-		}
+        
+	if(dataAmt !=0){
+		total_tx_count+=1;
+		total_block_count+=   dataAmt/50;
+	}
     });
 	
   
