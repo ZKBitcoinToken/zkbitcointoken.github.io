@@ -1151,6 +1151,8 @@ var total_TOTAL_mint_count_HASH = 0;
         miner_block_count[miner_address] = dataAmt/50;
 	if(dataAmt !=0){
      		miner_block_count2[miner_address] = 1;
+	}else{
+     		miner_block_count2[miner_address] = 0;
 	}
 	totalZKBTC_Mined[miner_address] = dataAmt;
 	totalZKTC_Calculated += dataAmt;
