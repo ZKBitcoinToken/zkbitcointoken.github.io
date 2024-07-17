@@ -1004,7 +1004,7 @@ var total_TOTAL_mint_count_HASH = 0;
 			  total_mint_count_HASH[mintData[2]] =  1;
 
 			} else {
-			  total_mint_count_HASH[mintData[2]]+=  1;
+			  total_mint_count_HASH[mintData[2]] +=  1;
 
 			}
 			 total_TOTAL_mint_count_HASH+=mintData[3]/50;
@@ -1017,14 +1017,14 @@ var total_TOTAL_mint_count_HASH = 0;
 		  
         if (miner_block_count[mintData[2]] === undefined) {
           miner_block_count[mintData[2]] =  mintData[3]/50;
-	  if(miner_block_count2[mintData[2]]  === undefined &&  mintData[3] ! = 0) {
+	  if(miner_block_count2[mintData[2]]  === undefined &&  mintData[3] != 0) {
 		  miner_block_count2[mintData[2]] =  1;
 	  }else if(  mintData[3] ! = 0 ){
 		miner_block_count2[mintData[2]] +=  1;
 	  }
         } else {
           miner_block_count[mintData[2]]+=  mintData[3]/50;
-	  if(miner_block_count2[mintData[2]]  === undefined &&  mintData[3] ! = 0) {
+	  if(miner_block_count2[mintData[2]]  === undefined &&  mintData[3] != 0) {
 		  miner_block_count2[mintData[2]] =  1;
 	  }else if(  mintData[3] ! = 0 ){
 		miner_block_count2[mintData[2]] +=  1;
