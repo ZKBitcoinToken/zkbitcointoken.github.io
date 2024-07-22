@@ -570,6 +570,10 @@ console.log("CB" , current_eth_block)
         };
     });
     
+	  
+	  
+	  const scaleFactor = 100000;
+
     let resultGraph = total_price_data.map((item, index) => {
         if (total_price_data2[index].y === 0) {
             // Handle division by zero if necessary
@@ -578,7 +582,7 @@ console.log("CB" , current_eth_block)
         }
         return {
             x: item.x, // You can choose to retain the x value or modify this structure
-            y: 1 / (item.y / total_price_data2[index].y)
+            y: 1 / (item.y / total_price_data2[index].y)*scaleFactor
         };
     });
       let result2 = total_price_data.map((item, index) => {
@@ -1072,8 +1076,7 @@ if (hashrate_data.length > 0 && hashrate_data[hashrate_data.length - 1].y === 0)
   });
 	  
 	  
-	  
-	  
+
 	  
 	  
 	  
@@ -1138,7 +1141,7 @@ if (hashrate_data.length > 0 && hashrate_data[hashrate_data.length - 1].y === 0)
             }else if (data.datasets[tooltipItem.datasetIndex].label == "Average Reward Time") {
               label += (+tooltipItem.yLabel).toFixed(2) + ' Minutes';
             }else if (data.datasets[tooltipItem.datasetIndex].label == "Total ETH Price of 1 zkBTC") {
-              label += "ETH Price of 1 zkBTC: "+ (+tooltipItem.yLabel).toFixed(8) + ' ETH';
+              label += "ETH Price of 1 zkBTC: "+ (tooltipItem.yLabel/scaleFactor).toFixed(8) + ' ETH';
             }else if (data.datasets[tooltipItem.datasetIndex].label == "Total USD $ Price of 1 zkBTC") {
               label +=  "USD $ Price of 1 zkBTC: "+ (+tooltipItem.yLabel).toFixed(4) + ' $';
             } else {
@@ -1161,7 +1164,7 @@ if (hashrate_data.length > 0 && hashrate_data[hashrate_data.length - 1].y === 0)
             }else if (data.datasets[tooltipItem.datasetIndex].label == "Average Reward Time") {
               label += (+tooltipItem.yLabel).toFixed(2) + ' Minutes';
             }else if (data.datasets[tooltipItem.datasetIndex].label == "Total ETH Price of 1 zkBTC") {
-              label += (+tooltipItem.yLabel).toFixed(8) + ' ETH';
+              label += (+tooltipItem.yLabel/scaleFactor).toFixed(8) + ' ETH';
             }else if (data.datasets[tooltipItem.datasetIndex].label == "Total USD $ Price of 1 zkBTC") {
               label += (+tooltipItem.yLabel).toFixed(4) + ' $';
             } else {
@@ -1231,7 +1234,8 @@ if (hashrate_data.length > 0 && hashrate_data[hashrate_data.length - 1].y === 0)
             
          suggestedMax: largestETHArray,
             callback: function(value, index, values) {
-              return value.toFixed(8);
+				console.log("Tick: ",value);
+			return (value / scaleFactor).toFixed(8);
             },
             //maxTicksLimit: 6,
             min: 0,
