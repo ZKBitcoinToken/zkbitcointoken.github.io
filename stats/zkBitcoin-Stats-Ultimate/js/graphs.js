@@ -1089,7 +1089,7 @@ if (hashrate_data.length > 0 && hashrate_data[hashrate_data.length - 1].y === 0)
             borderColor: 'rgb(50,205,50)',
             data: avgPriceAtTime,
             fill: false,
-            yAxisID: 'first-y-axis'
+            yAxisID: 'first-y-axisf'
 
         },{
             label: "Total ETH Price of 1 zkBTC",
@@ -1099,7 +1099,7 @@ if (hashrate_data.length > 0 && hashrate_data[hashrate_data.length - 1].y === 0)
             borderColor: 'rgb(158, 168, 219)',
             data: resultGraph,
             fill: false,
-            yAxisID: 'second-y-axis'
+            yAxisID: 'second-y-axisf'
 
         }]
     },
@@ -1189,7 +1189,8 @@ if (hashrate_data.length > 0 && hashrate_data[hashrate_data.length - 1].y === 0)
           }
         }],
         yAxes: [{
-            id: 'first-y-axis',
+            id: 'first-y-axisf',
+          position: 'left',
             type: 'linear',
             //type: 'logarithmic',  /* hard to read */
             scaleLabel: {
@@ -1211,7 +1212,7 @@ if (hashrate_data.length > 0 && hashrate_data[hashrate_data.length - 1].y === 0)
               },
             },
         }, {
-          id: 'second-y-axis',
+          id: 'second-y-axisf',
           position: 'right',
           type: 'linear',
           //type: 'logarithmic',  /* hard to read */
