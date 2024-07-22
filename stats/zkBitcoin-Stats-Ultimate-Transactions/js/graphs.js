@@ -570,6 +570,10 @@ console.log("CB" , current_eth_block)
         };
     });
     
+	  
+	  
+	  const scaleFactor = 100000;
+
     let resultGraph = total_price_data.map((item, index) => {
         if (total_price_data2[index].y === 0) {
             // Handle division by zero if necessary
@@ -578,7 +582,7 @@ console.log("CB" , current_eth_block)
         }
         return {
             x: item.x, // You can choose to retain the x value or modify this structure
-            y: 1 / (item.y / total_price_data2[index].y)
+            y: 1 / (item.y / total_price_data2[index].y)*scaleFactor
         };
     });
       let result2 = total_price_data.map((item, index) => {
@@ -1072,8 +1076,7 @@ if (hashrate_data.length > 0 && hashrate_data[hashrate_data.length - 1].y === 0)
   });
 	  
 	  
-	  
-	  
+
 	  
 	  
 	  
@@ -1089,7 +1092,7 @@ if (hashrate_data.length > 0 && hashrate_data[hashrate_data.length - 1].y === 0)
             borderColor: 'rgb(50,205,50)',
             data: avgPriceAtTime,
             fill: false,
-            yAxisID: 'first-y-axis'
+            yAxisID: 'first-y-axisf'
 
         },{
             label: "Total ETH Price of 1 zkBTC",
@@ -1099,7 +1102,7 @@ if (hashrate_data.length > 0 && hashrate_data[hashrate_data.length - 1].y === 0)
             borderColor: 'rgb(158, 168, 219)',
             data: resultGraph,
             fill: false,
-            yAxisID: 'second-y-axis'
+            yAxisID: 'second-y-axisf'
 
         }]
     },
@@ -1138,7 +1141,7 @@ if (hashrate_data.length > 0 && hashrate_data[hashrate_data.length - 1].y === 0)
             }else if (data.datasets[tooltipItem.datasetIndex].label == "Average Reward Time") {
               label += (+tooltipItem.yLabel).toFixed(2) + ' Minutes';
             }else if (data.datasets[tooltipItem.datasetIndex].label == "Total ETH Price of 1 zkBTC") {
-              label += "ETH Price of 1 zkBTC: "+ (+tooltipItem.yLabel).toFixed(8) + ' ETH';
+              label += "ETH Price of 1 zkBTC: "+ (tooltipItem.yLabel/scaleFactor).toFixed(8) + ' ETH';
             }else if (data.datasets[tooltipItem.datasetIndex].label == "Total USD $ Price of 1 zkBTC") {
               label +=  "USD $ Price of 1 zkBTC: "+ (+tooltipItem.yLabel).toFixed(4) + ' $';
             } else {
@@ -1161,7 +1164,7 @@ if (hashrate_data.length > 0 && hashrate_data[hashrate_data.length - 1].y === 0)
             }else if (data.datasets[tooltipItem.datasetIndex].label == "Average Reward Time") {
               label += (+tooltipItem.yLabel).toFixed(2) + ' Minutes';
             }else if (data.datasets[tooltipItem.datasetIndex].label == "Total ETH Price of 1 zkBTC") {
-              label += (+tooltipItem.yLabel).toFixed(8) + ' ETH';
+              label += (+tooltipItem.yLabel/scaleFactor).toFixed(8) + ' ETH';
             }else if (data.datasets[tooltipItem.datasetIndex].label == "Total USD $ Price of 1 zkBTC") {
               label += (+tooltipItem.yLabel).toFixed(4) + ' $';
             } else {
@@ -1189,7 +1192,8 @@ if (hashrate_data.length > 0 && hashrate_data[hashrate_data.length - 1].y === 0)
           }
         }],
         yAxes: [{
-            id: 'first-y-axis',
+            id: 'first-y-axisf',
+          position: 'left',
             type: 'linear',
             //type: 'logarithmic',  /* hard to read */
             scaleLabel: {
@@ -1211,7 +1215,7 @@ if (hashrate_data.length > 0 && hashrate_data[hashrate_data.length - 1].y === 0)
               },
             },
         }, {
-          id: 'second-y-axis',
+          id: 'second-y-axisf',
           position: 'right',
           type: 'linear',
           //type: 'logarithmic',  /* hard to read */
@@ -1230,7 +1234,8 @@ if (hashrate_data.length > 0 && hashrate_data[hashrate_data.length - 1].y === 0)
             
          suggestedMax: largestETHArray,
             callback: function(value, index, values) {
-              return value.toFixed(8);
+				console.log("Tick: ",value);
+			return (value / scaleFactor).toFixed(8);
             },
             //maxTicksLimit: 6,
             min: 0,
@@ -1379,6 +1384,7 @@ if (hashrate_data.length > 0 && hashrate_data[hashrate_data.length - 1].y === 0)
         yAxes: [{
             id: 'first-y-axis',
             type: 'linear',
+	    position: 'left',
             //type: 'logarithmic',  /* hard to read */
             scaleLabel: {
               display: true,
@@ -1605,6 +1611,7 @@ last_diff_start_blocks.addValueAtEthBlock(end_eth_block);
   //era_values.deleteLastPointIfZero();
   generateHashrateAndBlocktimeGraph(eth, mining_target_values, era_values, tokens_price_values, tokens_price_values2, tokens_price_values3, tokens_price_values4, tokens_minted_values);
  document.getElementById('topText').style.display = 'none';
+	
  document.getElementById('topText2').style.display = 'none';
   era_values.saveToLocalStorage();
 	
