@@ -1379,6 +1379,7 @@ if (hashrate_data.length > 0 && hashrate_data[hashrate_data.length - 1].y === 0)
         yAxes: [{
             id: 'first-y-axis',
             type: 'linear',
+	    position: 'left',
             //type: 'logarithmic',  /* hard to read */
             scaleLabel: {
               display: true,
