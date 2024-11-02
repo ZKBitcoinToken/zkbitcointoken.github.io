@@ -278,6 +278,7 @@ stats = [
 ['Token Holders',                 null,                                 "holders",          1,          null     ], /* usage */
 	
  ['Successful Mint Transactions',       null,                                 "txs",   1, null     ], /* mining */
+  ['Total USD Spent Minting Tokens',       null,                                 "txs",   1, null     ], /* mining */
   ['Token Transfers',               null,                                 "transfers",        1,          null     ], /* usage */
   ['Total Contract Operations',     null,                                 "txs",              1,          null     ], /* usage */
  ['Last Eth Block',                null,                      "",                 1,          null     ], /* mining */
@@ -833,6 +834,55 @@ el('#TotalContractOperations').innerHTML = "<b>" + data["countTxs"].toLocaleStri
 }) + "</b> txs";
   });
 }
+async function fetchTransactionsData(miner_blk_cnt) {
+    try {
+        // Fetching the transactions data from the GitHub API
+        const transactionsData = await $.getJSON('https://raw.githubusercontent.com/ZKBitcoinToken/zkBitcoin-Home-Git/refs/heads/main/saveFiles/transaction_analysis_cost_summary.json');
+        console.log("API DATA: ", transactionsData);
+        const combinedData = combineWithMinerData(miner_blk_cnt, transactionsData);
+        console.log("Combined Data: ", combinedData);
+        return combinedData;
+    } catch (error) {
+        console.error("Error fetching transaction data: ", error);
+        throw error; // Rethrow if you want to handle it elsewhere
+    }
+}
+function combineWithMinerData(miner_blk_cnt, transactionsData) {
+    // Prepare a new data structure to hold combined data
+    var combinedData = [];
+    console.log("Miner Block Count: ", miner_blk_cnt);
+    console.log("Transactions Data: ", transactionsData);
+
+    // Loop through the miner_blk_cnt array to find matches with transactions data
+    for (const address of miner_blk_cnt) {
+        // Convert the miner address to lowercase for comparison
+        const lowerCaseAddress = address.toLowerCase();
+        
+        // Find corresponding transaction entry for the address
+        const transactionEntry = transactionsData.find(entry => entry.to.toLowerCase() === lowerCaseAddress);
+        
+        if (transactionEntry) {
+            combinedData.push({
+                address: address,
+                totalValue: transactionEntry.total_value,
+                totalCost: transactionEntry.total_cost,
+                transactionCount: transactionEntry.transaction_count
+            });
+        } else {
+            // If no match found, still store the miner data with nulls for the transaction data
+            combinedData.push({
+                address: address,
+               	 totalValue: null,
+                totalCost: null,
+                transactionCount: null
+            });
+        }
+    }
+
+    // Example of how to use the combined data
+    console.log("Combined Data: ", combinedData);
+    return combinedData;
+}
 
 function showBlockDistributionPieChart(piechart_dataset, piechart_labels) {
   //console.log('dataset', piechart_dataset);
@@ -1201,8 +1251,67 @@ var total_TOTAL_mint_count_HASH = 0;
     log("processed blocks:",
       Object.keys(miner_block_count).length,
       "unique miners");
+	var gotthis ={};
+	//console.log("miner_block_count123: ",miner_block_count);
+// Get the addresses as an array
+const addresses = Object.keys(miner_block_count);
+var combinedAddresses = await fetchTransactionsData(addresses);
+	//console.log("miner_block_count123 addresses: ",addresses);
+	//console.log("My Addresses: ", combinedAddresses);
 
+// Call the function with your tettttt array
+//combineKnownMiners(tettttt);
+// Logging the result
+console.log("Combined Known Miners: ", combinedAddresses);
+	// Assuming miner_block_count, miner_block_count2, and totalZKBTC_Mined are all initialized properly
 
+	
+	// Assuming combinedAddresses is an array of objects
+for (var m1 = 0; m1 < combinedAddresses.length; m1++) {
+    const addressData1 = combinedAddresses[m1].address;
+ 
+	//	console.log("fsdfsdfsdf: ",combinedAddresses[m1].address);
+	//	console.log("address 1 known miner: ",known_miners[combinedAddresses[m1].address]);
+    // Skip if m1 is not a known miner
+    if (known_miners[combinedAddresses[m1].address] === undefined) continue; 
+
+    for (var m2 = m1; m2 < combinedAddresses.length; m2++) {
+        if (m1 === m2) continue; // Skip self-comparison
+		
+		//console.log("address 2222 known miner: ",known_miners[combinedAddresses[m2].address]);
+		
+        const addressData2 = combinedAddresses[m2].address;
+		//console.log("addysss : ",addressData2);
+        // Skip if m2 is not a known miner
+        if (known_miners[combinedAddresses[m2].address] === undefined) continue; 
+//console.log("address 1 known miner: ",known_miners[combinedAddresses[m1].address]);
+	//	console.log("address 2 known miner: ",known_miners[combinedAddresses[m2].address]);
+//console.log("address 1 known miner00000: ",known_miners[combinedAddresses[m1].address][0]);
+	//	console.log("address 2 known miner0000: ",known_miners[combinedAddresses[m2].address][0]);
+        // Check if the miners are in the same group
+        if (known_miners[combinedAddresses[m1].address][0] === known_miners[combinedAddresses[m2].address][0]) {
+            // Combine values
+			console.log("known miner match");
+            combinedAddresses[m2].totalValue += combinedAddresses[m1].totalValue; // Sum totalValue
+            combinedAddresses[m2].totalCost += combinedAddresses[m1].totalCost; // Sum totalValue
+            combinedAddresses[m2].transactionCount += combinedAddresses[m1].transactionCount; // Sum totalValue
+
+		console.log("combining  : ",addressData1, addressData2);
+            // Reset m2's values to indicate it's been combined
+            combinedAddresses[m1].totalValue = 0
+            combinedAddresses[m1].totalCost = 0
+            combinedAddresses[m1].transactionCount = 0
+		 }
+    }
+}
+
+// Optionally, filter out the combined entries (where totalCost is 0)
+combinedAddresses = combinedAddresses.filter(addressData => addressData.totalCost > 0);
+
+// Logging the result
+console.log("Combined Addresses: ", combinedAddresses);
+	
+	
     /* collapse miner_block_count using known_miners who have multiple
        address into a single address */
     for(var m1 in miner_block_count) {
@@ -1274,7 +1383,7 @@ var total_TOTAL_mint_count_HASH = 0;
 	/* delete miners with zero blocks (due to collapse op above) */
     Object.keys(miner_block_count2).forEach((miner_addr) => {
       if(miner_block_count2[miner_addr] == 0) {
-        delete miner_block_count[miner_addr]
+        delete miner_block_count2[miner_addr]
       }
     });
     /* delete miners with zero blocks (due to collapse op above) */
@@ -1304,6 +1413,17 @@ var total_TOTAL_mint_count_HASH = 0;
       backgroundColor: [],
       label: 'miner-data2'
     };
+	
+	
+  var tokensETH_Pool1f = getValueFromStats('u77', stats)
+  var tokensZKBTC_Pool1f = getValueFromStats('u88', stats)
+  var tokensETH_Pool2f = getValueFromStats('u99', stats)
+  var tokensUSDC_Pool2f = getValueFromStats('u1010', stats)
+
+const priceOf1ETHinUSDCf = tokensUSDC_Pool2f / tokensETH_Pool2f;
+	console.log("price of 1 eth in usd: ",priceOf1ETHinUSDCf );
+	
+	
     var innerhtml_buffer2 = '<tr><th>Miner</th><th>Recent Epochs Minted Count</th>'
       + '<th>% of Minted</th><th>Recent Miner Hashrate</th><th>Transaction Count</th><th>Recent zkBitcoin Mined By User</th></tr>';
     sorted_miner_block_count_recent_hash.forEach(function(miner_info) {
@@ -1330,6 +1450,7 @@ const formattedNumberfffff2 = new Intl.NumberFormat(navigator.language).format(R
     });
 	
 const formattedNumberfffff2FFFF = new Intl.NumberFormat(navigator.language).format(a_formattedNumberfffff2);
+	      
 	
       innerhtml_buffer2 += '<tr><td style="border-bottom: 0rem;">TOTAL:'
 		+ '</td><td style="border-bottom: 0rem;">'
@@ -1364,17 +1485,31 @@ const formattedNumberfffff2FFFF = new Intl.NumberFormat(navigator.language).form
       backgroundColor: [],
       label: 'miner-data'
     };
+	var totalSpentINUSD = 0;
     var innerhtml_buffer = '<tr><th>Miner</th><th>Total Epochs Minted Count</th>'
-      + '<th>% of Minted</th><th>Transaction Count</th><th>TOTAL zkBitcoin Mined By User</th></tr>';
+      + '<th>% of Minted</th><th>Transaction Count</th><th>TOTAL zkBitcoin Mined</th><th>Total USD Spent Minting</th></tr>';
     sorted_miner_block_count.forEach(function(miner_info) {
       var addr = miner_info[0];
+// Find the matching address in combinedAddresses
+const matchingAddressData = combinedAddresses.find(addressData => addressData.address === addr);
+var totalCostForUser = 0;
+if (matchingAddressData) {
+    // If a match is found, retrieve the totalCost
+    const totalCost = matchingAddressData.totalCost;
+    //console.log("Total Cost for address", addr, ":", totalCost);
+	totalCostForUser = totalCost / 1e18;
+	
+} else {
+   // console.log("Address", addr, "not found in combinedAddresses.");
+}
+		totalCostForUser = totalCostForUser * priceOf1ETHinUSDCf;
+		totalSpentINUSD+=totalCostForUser;
       var blocks = miner_info[1];
-
 	var RewardAmount = miner_info[2].toFixed(0);
 	var TotalBlocksPerReward = miner_info[3].toFixed(0);
       var miner_name_link = getMinerNameLinkHTML(addr, known_miners);
       var percent_of_total_blocks = blocks/total_block_count;
-
+	
       piechart_dataset.data.push(blocks);
       piechart_dataset.backgroundColor.push(getMinerColor(addr, known_miners))
       piechart_labels.push(getMinerName(addr, known_miners))
@@ -1383,14 +1518,20 @@ const formattedNumberfffff2 = new Intl.NumberFormat(navigator.language).format(R
       innerhtml_buffer += '<tr><td>'
         + miner_name_link + '</td><td>'
         + blocks + '</td><td>'
-        + (100*percent_of_total_blocks).toFixed(2) + '%' + '</td><td>'+TotalBlocksPerReward+'</td><th>'+formattedNumberfffff2+' zkBitcoin</th></tr>';
+        + (100*percent_of_total_blocks).toFixed(2) + '%' + '</td><td>'+TotalBlocksPerReward+'</td><th style="white-space: nowrap">'+formattedNumberfffff2+' zkBitcoin</th><th>'+totalCostForUser.toFixed(2)+' $</th></tr>';
     });
 const formattedNumberfffff23 = new Intl.NumberFormat(navigator.language).format(totalZKTC_Calculated.toFixed(0));
 
+	
+	el_safe('#TotalUSDSpentMintingTokens').innerHTML = "<b>" + totalSpentINUSD.toLocaleString(undefined, {
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 2
+}) + "</b> $";
+	
   el_safe('#SuccessfulMintTransactions').innerHTML = "<b> "+(total_tx_count).toLocaleString()+" </b> txs";
     /* add the last row (totals) */
     innerhtml_buffer += '<tr><td style="border-bottom: 0rem;">TOTAL:</td><td style="border-bottom: 0rem;">'
-      + total_block_count + '</td><td style="border-bottom: 0rem;">100%</td><td style="border-bottom: 0rem;">' + total_tx_count + '</td><td style="border-bottom: 0rem;">'+formattedNumberfffff23+' zkBitcoin</td></tr>';
+      + total_block_count + '</td><td style="border-bottom: 0rem;">100%</td><td style="border-bottom: 0rem;">' + total_tx_count + '</td><td style="border-bottom: 0rem;">'+formattedNumberfffff23+' zkBitcoin</td><td style="border-bottom: 0rem;">'+totalSpentINUSD.toFixed(2)+' $</tr>';
     el('#minerstats').innerHTML = innerhtml_buffer;
     log('done populating miner stats');
     // $(window).hide().show(0);
@@ -1608,7 +1749,8 @@ if(stat[0]=='Total Supply in all Balancer Pool 2' || stat[0] =='TotalSupply Stak
   ['',                              null,                                 "",                 1,          null     ], 
  ['Total Supply in all Balancer Pool 1',               token4.totalSupply,                      "",                 0.000000000000000001,          null     ], 
    ['TotalSupply Staking Contract Pool 1',   token3.totalSupply,  "",                 0.000000000000000001,          null     ], 
-   ['RewardRate Pool 1',   token3.rewardRate,  "",                 1,          null     ], 
+   ['RewardRate Pool 1',   token3
+https://github.com/MetaMask/metamask-extension/issues/22533.rewardRate,  "",                 1,          null     ], 
    ['RewardRate3 Pool 1',   token3.rewardRate3,  "",                 1,          null     ],
   ['Pool 1 Num1 Token',                token5.pool1Stats,                      "ABAS",                 0.000000000000000001,          null     ],
     ['Pool 1 Num2 Token',                token5.pool1Stats,                      "ETH",                 0.000000000000000001,          null     ],
